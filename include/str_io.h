@@ -68,7 +68,24 @@ namespace str{
 			ss >> controlFlag;
 			if(controlFlag == 'L'){
 				// handle laser data
-				//TODO
+				laser lData;
+				ss >> x >> y >> theta;
+				lData.x = x;
+				lData.y = y;
+				lData.theta = theta;
+				ss >> x >> y >> theta;
+				lData.xl = x;
+				lData.yl = y;
+				lData.thetal = theta;
+				std::vector<float> r(180);
+				for(int i = 0; i < 180; i++){
+					ss >> r[i];
+				}
+				lData.r = r;
+				ss >> ts;
+				lData.ts = ts;
+				laserData.push_back(lData);
+
 			}else{
 				//handle odom data
 				ss >> x >> y >> theta >> ts;

@@ -23,8 +23,23 @@ int main() {
 
 	for( auto it = odomData.begin(); it!= odomData.end(); it++)
 	{
-		std::cout << it->x << "\n";
+		std::cout <<"O:"<<  it->x << "\n";
 	}
+
+	for( auto it = laserData.begin(); it!= laserData.end(); it++)
+	{
+		std::cout << "L:"<< it->x << "\n";
+
+		gp << "plot '-' title 'pts_A'\n";
+		gp.send1d(it->r);
+		std::cout << "Waiting to continue...";
+		char c;
+		std::cin >> c;
+
+
+	}
+
+
 
 
 	return 0;
