@@ -37,6 +37,8 @@ namespace str{
 	ts - timestamp of laser reading
 	*/
 
+	const int MAX_RANGE = 8183; // empirically determined
+
 	struct laser{
 		double x;
 		double y;
@@ -44,7 +46,7 @@ namespace str{
 		double xl;
 		double yl;
 		double thetal;
-		std::vector<float> r;
+		std::vector<int> r;
 		double ts;
 	};
 
@@ -77,7 +79,7 @@ namespace str{
 				lData.xl = x;
 				lData.yl = y;
 				lData.thetal = theta;
-				std::vector<float> r(180);
+				std::vector<int> r(180);
 				for(int i = 0; i < 180; i++){
 					ss >> r[i];
 				}

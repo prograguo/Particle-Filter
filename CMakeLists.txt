@@ -25,7 +25,7 @@ include_directories(
 
 add_executable(robot_viz_test
 	src/robot_viz_test.cpp 
-	include/gnuplot-iostream.h 
+	#include/gnuplot-iostream.h 
 	)
 target_link_libraries(robot_viz_test
 	${Boost_LIBRARIES}

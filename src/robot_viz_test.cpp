@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <unistd.h> // usleep
 
 #include <boost/tuple/tuple.hpp>
 #include <boost/array.hpp>
@@ -11,6 +12,8 @@
 
 #include "gnuplot-iostream.h"
 #include "str_io.h"
+#include "str_sensor_model.h"
+#include "str_transforms.h"
 
 int main() {
 	Gnuplot gp;
@@ -19,24 +22,86 @@ int main() {
 
 	std::vector<str::laser> laserData;
 	std::vector<str::odom> odomData;
-	str::readRobotData("data/log/robotdata1.log", laserData,	odomData);
+	str::readRobotData("data/log/ascii-robotdata2.log", laserData,	odomData);
+	gp << "set term x11 0\n";
+	for(int j = 0; j < str::MAX_RANGE; j+= 250){
+		std::vector<double> sensorModel;
+		sensorModel = str::generateSensorModel( 
+			0.0001, 1000, 0.0001, 1000, j, 250);
 
-	for( auto it = odomData.begin(); it!= odomData.end(); it++)
-	{
-		std::cout <<"O:"<<  it->x << "\n";
-	}
 
-	for( auto it = laserData.begin(); it!= laserData.end(); it++)
-	{
-		std::cout << "L:"<< it->x << "\n";
+		
+		std::vector<std::pair<int, double>> sensorModelPlot(str::MAX_RANGE);
+		
+		for(int i = 0; i < str::MAX_RANGE; i++){
+
+			std::pair<int,double> pt(i, sensorModel[i]);
+			sensorModelPlot[i] = pt;
+		}
+
+
 
 		gp << "plot '-' title 'pts_A'\n";
-		gp.send1d(it->r);
-		std::cout << "Waiting to continue...";
-		char c;
-		std::cin >> c;
+		gp.send1d(sensorModelPlot);
+		
+	}
 
 
+	gp << "set term x11 1\n";
+	for( auto it = odomData.begin(); it!= odomData.end(); it++)
+	{
+		;
+	}
+
+	float maxVal = 0;
+	for( auto it = laserData.begin(); it!= laserData.end(); it++)
+	{
+
+		for(auto it2 = it->r.begin(); it2 != it->r.end(); it2++)
+		{
+			if( *it2 > maxVal){
+				maxVal = *it2;
+				std::cout << "MaxValue is " << maxVal << "\n";
+				
+			}
+		}
+
+		std::vector<std::pair<double,double>> xy;
+		xy = str::range2Point(it->r);
+		gp << "set xrange [-1000:1000]\nset yrange [-200:1250]\n";
+		gp << "plot '-' title 'pts_A'\n";
+		gp.send1d(xy);
+		usleep(10);
+
+	}
+
+
+
+
+	//plot again
+
+	gp << "set term x11 0\n";
+	gp << "set autoscale\n";
+	for(int j = 0; j < str::MAX_RANGE; j+= 250){
+		std::vector<double> sensorModel;
+		sensorModel = str::generateSensorModel( 
+			0.0001, 1000, 0.0001, 1000, j, 250);
+
+
+		
+		std::vector<std::pair<int, double>> sensorModelPlot(str::MAX_RANGE);
+		
+		for(int i = 0; i < str::MAX_RANGE; i++){
+
+			std::pair<int,double> pt(i, sensorModel[i]);
+			sensorModelPlot[i] = pt;
+		}
+
+
+
+		gp << "plot '-' title 'pts_A'\n";
+		gp.send1d(sensorModelPlot);
+		
 	}
 
 
