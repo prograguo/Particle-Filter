@@ -99,9 +99,39 @@ namespace str{
 				odomData.push_back(oData);
 			}
 		}
-
-
 	}
+
+
+	/* Function to read in map
+	*/
+
+const int MAP_SIZE = 4;
+
+void readMap(
+	std::vector<std::vector<float>>& grid, 
+	std::string filename)
+{
+	std::ifstream file;
+	std::string line;
+	grid.clear();
+	file.open(filename);
+	for(int i = 0; i < 7; i++){
+		std::getline(file, line);
+	}
+
+	while(std::getline(file, line)){
+		std::vector<float> rowData;
+		std::istringstream ss(line);
+		int temp;
+		for(int i = 0; i < MAP_SIZE; i++){
+			
+			ss >> temp;
+			rowData.push_back(temp);
+		}
+		grid.push_back(rowData);
+	}
+	return;
+}
 
 
 

@@ -1,0 +1,11 @@
+robot_specifications->global_mapsize_x                 40
+robot_specifications->global_mapsize_y                 40
+robot_specifications->resolution                       10
+robot_specifications->autoshifted_x                    0
+robot_specifications->autoshifted_y                    0
+
+global_map[0]: 4 4
+-1.000 -1.000 -1.000 -1.000 
+-1.000 0.850 0.796 0.798
+0.850 0.796 0.798 0.844
+0.936 0.985 0.991 0.993
