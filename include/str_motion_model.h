@@ -2,7 +2,7 @@
 #define __MOTION_MODEL__
 
 #include "particle.h"
-#include "str_io.h"
+#include "types.h"
 
 namespace str
 {

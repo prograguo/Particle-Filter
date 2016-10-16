@@ -13,6 +13,10 @@ find_package(Boost REQUIRED COMPONENTS
 	iostreams)
 message("Boost found: ${Boost_FOUND}")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${str_hw3_SOURCE_DIR}/cmake")
+find_package(LibConfig++ REQUIRED)
+message("Libconfig++ found: ${LIBCONFIG_FOUND}")
+
 include_directories(
 	${str_hw3_SOURCE_DIR}/include
 	${Boost_INCLUDE_DIRS})
@@ -35,6 +39,23 @@ add_executable(test_ray_tracer
 	)
 target_link_libraries(test_ray_tracer
 	${Boost_LIBRARIES}
+	)
+
+add_executable(persistant_map
+	src/persistant_map.cpp 
+	#include/gnuplot-iostream.h 
+	)
+target_link_libraries(persistant_map
+	${Boost_LIBRARIES}
+	)
+
+
+add_executable(libconfig_example
+	src/libconfig_example.cpp 
+	)
+target_link_libraries(libconfig_example
+	${Boost_LIBRARIES}
+	${LIBCONFIGPP_LIBRARIES}
 	)
 
 

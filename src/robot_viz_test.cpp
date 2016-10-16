@@ -11,9 +11,10 @@
 #include <boost/bind.hpp>
 
 #include "gnuplot-iostream.h"
+#include "types.h"
 #include "str_io.h"
 #include "str_sensor_model.h"
-#include "str_transforms.h"
+#include "helper_functions.h"
 
 #include "bee-map.h"
 #include "bee-map-impl.h"
@@ -40,7 +41,7 @@ int main() {
 			// 0 probability for free space
 			// >0 prob for occupied voxels
 			// <0 for unexplored
-			if(costMap.prob[i][j] < 0){
+			if(costMap.prob[i][j] > 0){
 				float x = i;
 				float y = j;
 				plotMap.push_back(std::pair<float,float>(x,y));
