@@ -36,21 +36,43 @@ int main()
         };
     str::RayTracer RT;
     // RT.populateRangeCache(map);
-    std::vector<double> v = RT.getRangesFromPoint(map, std::pair<int,int>(4,4));
+    std::vector<double> v = RT.getRangesFromPoint(map, std::pair<int,int>(5,4));
     printv(v);
 
 
     Gnuplot gp;
-    std::vector<std::pair<float, float>> plotMap;
+    
+    // Plot the test map
+    std::vector<std::pair<float, float>> plotMap1;
+    for(int i = 0; i < 8; i++)
+        for(int j = 0; j < 11; j++)
+        {
+            //std::cout << costMap.prob[i][j] << " ";
+
+            // CostMap.prob has 
+            // 0 probability for free space
+            // >0 prob for occupied voxels
+            // <0 for unexplored
+            if(map[i][j] == 1){
+                plotMap1.push_back(std::pair<float,float>(j,8-i));
+            }
+        }
+    gp << "set term x11 1\n";
+    gp << "plot '-' title 'obstacle'\n";
+    gp.send1d(plotMap1);
+
+
+    // Plot the lidar output
+    std::vector<std::pair<float, float>> plotMap2;
     int deg = 0;
     for(auto i=v.begin(); i!=v.end(); ++i)
     {
         double rad = (deg * PI)/180.;
-        plotMap.push_back(std::pair<float,float>((*i)*cos(rad),(*i)*sin(rad)));
+        plotMap2.push_back(std::pair<float,float>((*i)*cos(rad),(*i)*sin(rad)));
         deg++;
     }
-    gp << "set term x11 3\n";
+    gp << "set term x11 2\n";
     // gp << "set xrange [-20:20]\nset yrange [-10:10]\n";
     gp << "plot '-' title 'prob'\n";
-    gp.send1d(plotMap);
+    gp.send1d(plotMap2);
 }
