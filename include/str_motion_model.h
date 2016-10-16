@@ -4,31 +4,31 @@
 #include "particle.h"
 #include "str_io.h"
 
-namespace motion_model
+namespace str
 {
 
 // Class that takes is initialized with an initial estimate of odometry
 // and is used to propagate any particle.
-	class motion_propagation
+	class motion_model
 	{
 	public:
 
-		motion_propagation(const odom& inital_reading);
+		motion_model(const params parameters);
 
-		void propagate_particle(particle& original_particle);
+		void propagate_particle(particle& particle);
 
 		void update_odometry(const odom& reading1, const odom2& reading2);
 
 	private:
 
-		//First rotation to align with the translation axis
-		float theta1_ = 0;
+		//Perturbation for the first rotation to align with the translation axis
+		float theta1_rad = 0;
 
-		//Translation along the translation axis
-		float translation_ = 0;
+		//Perturbation for the translation along the translation axis
+		float translation_cm = 0;
 
-		//Final rotation to align with the final orientation
-		float theta2_ = 0;
+		//Perturbation for the final rotation to align with the final orientation
+		float theta2_rad = 0;
 
 		//Tuning parameters
 		params params_;
@@ -38,3 +38,6 @@ namespace motion_model
 
 
 }//end namespace str
+
+
+#endif
