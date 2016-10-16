@@ -1,5 +1,6 @@
 #ifndef __str_ray_tracer__
 #define __str_ray_tracer__
+#endif
 
 #include <vector>
 #include <cmath>
@@ -27,14 +28,6 @@ namespace str {
     //
     // Helper Functions
     //
-    void printv(std::vector<double> r)
-    {
-        int th=0;
-        for(auto i=r.begin(); i!=r.end(); i++)
-            std::cout<<"th: "<< th++<< "range: "<<*i<<'\n';
-        std::cout<<'\n';
-    }
-
     int getQuadrant(double angle)
     {
         return angle/90;        
@@ -160,17 +153,19 @@ namespace str {
                 {
                     case 0:
                     case 3:
-                        ranges[theta] = range_x - 0.5; 
-                        // Alternate:
-                        // (abs(X-point.second)*angle_cache[theta].tDeltaX) - 0.5;
+                        // Options:
+                        // ranges[theta] = range_x - 0.5; 
+                        // ranges[theta] = (abs(X-point.second)*angle_cache[theta].tDeltaX) - 0.5;
+                        ranges[theta] = sqrt((X-point.second)*(X-point.second) + (Y-point.first)*(Y-point.first)) - 0.5;
                         break;
                     case 1:
                     case 2:
-                        ranges[theta] = range_y - 0.5; 
-                        // ALternate
-                        //(abs(Y-point.first)*angle_cache[theta].tDeltaY) - 0.5;
+                        // Options:
+                        // ranges[theta] = range_y - 0.5;
+                        // ranges[theta] = (abs(Y-point.first)*angle_cache[theta].tDeltaY) - 0.5;
+                        ranges[theta] = sqrt((X-point.second)*(X-point.second) + (Y-point.first)*(Y-point.first))  - 0.5;
                         break;
-                }                    
+                }
                 // cout<<"theta: "<<theta<<" stop point "<<Y<<", "<<X<<"range is "<<ranges[theta]<<'\n';
 
             }
@@ -190,4 +185,4 @@ namespace str {
         }
 
     };
-}
+} // end ns str

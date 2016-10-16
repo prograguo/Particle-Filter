@@ -30,6 +30,12 @@ add_executable(robot_viz_test
 target_link_libraries(robot_viz_test
 	${Boost_LIBRARIES}
 	)
+add_executable(test_ray_tracer
+	src/test_ray_tracer.cpp
+	)
+target_link_libraries(test_ray_tracer
+	${Boost_LIBRARIES}
+	)
 
 
 ################################################
