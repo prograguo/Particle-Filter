@@ -78,10 +78,10 @@ int main() {
 
 
   sf::Font font;
-  if (!font.loadFromFile("/usr/share/fonts/truetype/msttcorefonts/times.ttf")){
+  if (!font.loadFromFile("/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-M.ttf")){
   	return -1;
   }
-  sf::Text FPS("FPS",font, 10);
+  sf::Text FPS("FPS",font, 15);
 
   sf::Clock clock;
   float lastTime = 0;
