@@ -17,9 +17,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${str_hw3_SOURCE_DIR}/cmake")
 find_package(LibConfig++ REQUIRED)
 message("Libconfig++ found: ${LIBCONFIG_FOUND}")
 
+find_package(SFML 2 REQUIRED system window graphics)
+
 include_directories(
 	${str_hw3_SOURCE_DIR}/include
-	${Boost_INCLUDE_DIRS})
+	${Boost_INCLUDE_DIRS}
+	${LIBCONFIGPP_INCLUDE_DIRS}
+	${SFML_INCLUDE_DIRS})
 
 
 
@@ -29,7 +33,6 @@ include_directories(
 
 add_executable(robot_viz_test
 	src/robot_viz_test.cpp 
-	#include/gnuplot-iostream.h 
 	)
 target_link_libraries(robot_viz_test
 	${Boost_LIBRARIES}
@@ -43,7 +46,6 @@ target_link_libraries(test_ray_tracer
 
 add_executable(persistant_map
 	src/persistant_map.cpp 
-	#include/gnuplot-iostream.h 
 	)
 target_link_libraries(persistant_map
 	${Boost_LIBRARIES}
@@ -56,6 +58,15 @@ add_executable(libconfig_example
 target_link_libraries(libconfig_example
 	${Boost_LIBRARIES}
 	${LIBCONFIGPP_LIBRARIES}
+	)
+
+add_executable(sfml_example
+	src/sfml_example.cpp 
+	)
+target_link_libraries(sfml_example
+	${Boost_LIBRARIES}
+	${LIBCONFIGPP_LIBRARIES}
+	${SFML_LIBRARIES}
 	)
 
 
