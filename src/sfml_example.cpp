@@ -26,6 +26,10 @@
 #include "bee-map-impl.h"
 
 int main() {
+
+	std::vector<str::laser> laserData;
+	std::vector<str::odom> odomData;
+	str::readRobotData("data/log/ascii-robotdata2.log", laserData,	odomData);
 	
 	map_type costMap;
 	std::vector<std::pair<int, int>> freeSpace;
@@ -65,9 +69,12 @@ int main() {
 	}
 	sf::RenderWindow window(sf::VideoMode(800, 800), "sensorModel");
 	int cnt = 0;
+	int laserCnt = 0;
 
 	sf::CircleShape shape(10);
   shape.setFillColor(sf::Color(100, 250, 250));
+
+  sf::VertexArray lArray(sf::Lines, 180*2);
 
 
   sf::Font font;
@@ -83,7 +90,8 @@ int main() {
 		
 		// use while (window.pollEvent(event)) to make window responsive (max ~200 FPS)
 		// use while (true) to make loop run as fast as possible (400 FPS)
-    while (window.pollEvent(event))
+    //while (window.pollEvent(event))
+    while (true)
     {
 
       // "close requested" event: we close the window
@@ -95,7 +103,7 @@ int main() {
       shape.setPosition(sf::Vector2f(cnt%800, 5*cnt/800));
       
       // FPS
-      if(cnt %250 == 0){
+      if(cnt %25 == 0){
 	      sf::Time elapsed1 = clock.getElapsedTime();
 	      float fps = 25.0 / elapsed1.asSeconds();
 	      FPS.setString(std::to_string(fps));
@@ -109,15 +117,37 @@ int main() {
 					pt = freeSpace[r_pt];
 					pArray[i].position = sf::Vector2f(pt.first, pt.second);
 				}
+
+				if(laserCnt < laserData.size())
+				{
+						std::vector<std::pair<double,double>> xy;
+						xy = str::range2Point(laserData[laserCnt].r); 
+						for(int i= 0; i < xy.size(); i++)
+						{
+							// let's put the laser scan on the first random particle
+							int px = 400;//pArray[0].position.x;
+							int py = 400;//pArray[0].position.y;
+							int rx = xy[i].first/100;
+							int ry = xy[i].second/100;
+							lArray[2*i].position = sf::Vector2f(px,py);
+							lArray[2*i+1].position = sf::Vector2f(px+rx,py+ry); 
+							lArray[2*i].color = sf::Color::Blue;
+							lArray[2*i+1].color = sf::Color::Blue;
+						}
+				laserCnt++;
+				}
+
+
 	    }
 	    
 	    window.clear();
       window.draw(vArray);
       window.draw(pArray);
+      window.draw(lArray);
       window.draw(shape);
       window.draw(FPS);
       window.display();
-      cnt+=10;
+      cnt+=1;
     }
   }
 
