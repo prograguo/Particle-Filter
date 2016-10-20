@@ -5,8 +5,8 @@
 #include <vector>
 #include <cmath>
 #include <unordered_map>
+#include "bee-map.h"
 
-#define PI 3.1415926535897932384626433832795
 #define MAX_DEGREES 360
 
 // TODO(Tushar): Remove afer using Map structure
@@ -31,6 +31,11 @@ namespace str {
     int getQuadrant(double angle)
     {
         return angle/90;        
+    }
+
+    bool isObstacle(double value)
+    {
+        return value > 0.5;
     }
     //
     // Helper functions end
@@ -68,7 +73,7 @@ namespace str {
             for(int angle=0; angle<MAX_DEGREES; angle++)
             {
                 // TODO(Tushar) Optimize?
-                angle_cache[angle].radians = angle*PI/180.0;
+                angle_cache[angle].radians = angle * M_PI/180.0;
                 double tan_radians = tan(angle_cache[angle].radians);
                 angle_cache[angle].tmaxX = fabs(0.5*tan_radians);
                 angle_cache[angle].tmaxY = fabs(0.5/tan_radians);
@@ -85,19 +90,19 @@ namespace str {
             // X will be decreased in quadrants 1,2 and Y in 0,1
             switch(quadrant)
                 {
-                    case 3:
+                    case 0:
                         stepX = 1;
-                        stepY = 1;
-                        break;
-                    case 2:
-                        stepX = -1;
                         stepY = 1;
                         break;
                     case 1:
                         stepX = -1;
+                        stepY = 1;
+                        break;
+                    case 2:
+                        stepX = -1;
                         stepY = -1;
                         break;
-                    case 0:
+                    case 3:
                         stepX = 1;
                         stepY = -1;
                         break;
@@ -105,11 +110,11 @@ namespace str {
         }
 
         // Populate the cache and return the ranges from the particle/point
-        std::vector<double> getRangesFromPoint(float map[][C], std::pair<int,int> point)
+        std::vector<double> getRangesFromPoint(map_type &map, std::pair<int,int> point)
         {
             // TODO Use from Map structure
-            int map_size_x = C;
-            int map_size_y = R;
+            int map_size_x = map.size_x;
+            int map_size_y = map.size_y;
 
             int stepX = 1;
             int stepY = 1;
@@ -118,15 +123,15 @@ namespace str {
             for(int theta=0; theta<MAX_DEGREES; theta++)
             {
                 angle_data &d = angle_cache[theta];
-                int X = point.second;
-                int Y = point.first;
+                int X = point.first;
+                int Y = point.second;
                 double tmaxX = d.tmaxX;
                 double tmaxY = d.tmaxY;
                 double range_x = 0;
                 double range_y = 0;
                 setStepXY(theta, stepX, stepY);
                 
-                while(X>=0 && X<map_size_x && Y>=0 && Y<map_size_y)
+                while(true)
                 {
                     // std::cout<<"theta: "<<theta<<", tmaxX "<<tmaxX<<", tmaxy "<<tmaxY<<", deltax "<<d.tDeltaX<<", deltay "<<d.tDeltaY<<", range: "<<range_x<<'\n';
                     if(tmaxX < tmaxY)
@@ -141,29 +146,30 @@ namespace str {
                         range_y += d.tDeltaY;
                         Y += stepY;
                     }
-
+                    if(!(X>=0 && X<map_size_x && Y>=0 && Y<map_size_y))
+                        break;
                     // TODO(Tushar) handle 0.5, -1 probability
-                    if(map[Y][X] == 1)
+                    if(isObstacle(map.prob[X][Y]))
                         break;
                 }
                 // std::cout<<"theta: "<<theta<<", end point: "<<X<<", "<<Y<<'\n';
                 
-                // Select accurate range based on the octant
+                // Select accurate range based on the octant. Option 3 is independent of Octant
                 switch((theta%180)/45)
                 {
                     case 0:
                     case 3:
                         // Options:
                         // ranges[theta] = range_x - 0.5; 
-                        // ranges[theta] = (abs(X-point.second)*angle_cache[theta].tDeltaX) - 0.5;
-                        ranges[theta] = sqrt((X-point.second)*(X-point.second) + (Y-point.first)*(Y-point.first)) - 0.5;
+                        // ranges[theta] = (abs(X-point.first)*angle_cache[theta].tDeltaX) - 0.5;
+                        ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second)) - 0.5;
                         break;
                     case 1:
                     case 2:
                         // Options:
                         // ranges[theta] = range_y - 0.5;
-                        // ranges[theta] = (abs(Y-point.first)*angle_cache[theta].tDeltaY) - 0.5;
-                        ranges[theta] = sqrt((X-point.second)*(X-point.second) + (Y-point.first)*(Y-point.first))  - 0.5;
+                        // ranges[theta] = (abs(Y-point.second)*angle_cache[theta].tDeltaY) - 0.5;
+                        ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second))  - 0.5;
                         break;
                 }
                 // cout<<"theta: "<<theta<<" stop point "<<Y<<", "<<X<<"range is "<<ranges[theta]<<'\n';
@@ -174,12 +180,12 @@ namespace str {
         }
 
         // Force populate the cache
-        void populateRangeCache(float map[][C])
+        void populateRangeCache(map_type &map)
         {
-            for(int i=0; i<R; i+=5)
-                for(int j=0; j<C; j+=5)
+            for(int i=0; i<map.size_y; i+=5)
+                for(int j=0; j<map.size_x; j+=5)
                 {
-                    if(map[i][j] == 0 || map[i][j] == 0.5)
+                    if( !isObstacle(map.prob[i][j]) )
                         getRangesFromPoint(map, std::pair<int, int>(i,j));
                 }
         }

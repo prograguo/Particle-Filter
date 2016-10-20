@@ -10,6 +10,13 @@
 
 #include "gnuplot-iostream.h"
 #include "str_ray_tracer.h"
+#include "types.h"
+#include "str_io.h"
+#include "str_sensor_model.h"
+#include "helper_functions.h"
+
+#include "bee-map.h"
+#include "bee-map-impl.h"
 
 void printv(std::vector<double> r)
 {
@@ -23,41 +30,50 @@ void printv(std::vector<double> r)
 int main()
 {
     // int map[R][C] = {0};
-    float map[8][11] = 
-        {
-            {-1,-1,-1,-1,-1, 1, 1,-1,-1,-1,-1},
-            {-1,-1,-1,-1,-1, 1, 1,-1,-1, 1,-1},
-            {-1, 1, 1, 1, 1, 0, 1,-1, 1, 0, 1},
-            {-1, 1, 0, 0, 0, 0, 1,-1, 1, 0, 1},
-            {-1,-1, 1, 0, 0, 0, 1, 1, 1, 0, 1},
-            {-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-        };
+    // float map[8][11] = 
+    //     {
+    //         {-1,-1,-1,-1,-1, 1, 1,-1,-1,-1,-1},
+    //         {-1,-1,-1,-1,-1, 1, 1,-1,-1, 1,-1},
+    //         {-1, 1, 1, 1, 1, 0, 1,-1, 1, 0, 1},
+    //         {-1, 1, 0, 0, 0, 0, 1,-1, 1, 0, 1},
+    //         {-1,-1, 1, 0, 0, 0, 1, 1, 1, 0, 1},
+    //         {-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    //         {-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    //         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+    //     };
     str::RayTracer RT;
     // RT.populateRangeCache(map);
-    std::vector<double> v = RT.getRangesFromPoint(map, std::pair<int,int>(5,4));
-    printv(v);
+    // 
+    map_type costMap;
+
+    // TEST MAP:
+    // char datLoc[] = "data/map/test_ray_tracer.dat";
+    // int val = read_beesoft_map(datLoc, &costMap);
+    // std::vector<double> v = RT.getRangesFromPoint(costMap, std::pair<int,int>(4,8-3));
+
+    // WEAN:
+    char datLoc[] = "data/map/wean.dat";
+    int val = read_beesoft_map(datLoc, &costMap);
+    std::vector<double> v = RT.getRangesFromPoint(costMap, std::pair<int,int>(230,415));
+    // printv(v);
 
 
+    std::cout<<"Map size: "<<costMap.size_x<<", "<<costMap.size_y<<'\n';
     Gnuplot gp;
     
     // Plot the test map
     std::vector<std::pair<float, float>> plotMap1;
-    for(int i = 0; i < 8; i++)
-        for(int j = 0; j < 11; j++)
+    for(int i = 0; i < costMap.size_x; i++)
+        for(int j = 0; j < costMap.size_y; j++)
         {
-            //std::cout << costMap.prob[i][j] << " ";
-
-            // CostMap.prob has 
-            // 0 probability for free space
-            // >0 prob for occupied voxels
-            // <0 for unexplored
-            if(map[i][j] == 1){
-                plotMap1.push_back(std::pair<float,float>(j,8-i));
+            if(costMap.prob[i][j] == 0) {
+                plotMap1.push_back(std::pair<float,float>(float(i),float(j)));
             }
+            // else
+                // std::cout<<"Valid point: "<<i<<", "<<j<<costMap.prob[i][j]<<"\n";
         }
     gp << "set term x11 1\n";
+    // gp << "set xrange [0:"<<costMap.size_x<<"]\nset yrange [0:"<<costMap.size_y<<"]\n";
     gp << "plot '-' title 'obstacle'\n";
     gp.send1d(plotMap1);
 
@@ -67,7 +83,7 @@ int main()
     int deg = 0;
     for(auto i=v.begin(); i!=v.end(); ++i)
     {
-        double rad = (deg * PI)/180.;
+        double rad = (deg * M_PI)/180.;
         plotMap2.push_back(std::pair<float,float>((*i)*cos(rad),(*i)*sin(rad)));
         deg++;
     }
