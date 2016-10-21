@@ -9,12 +9,6 @@ motion_model::motion_model(params parameters)
 	params_ = parameters;
 }
 
-
-void motion_model::propagate_particle(particle& original_particle)
-{
-
-}
-
 void motion_model::update_odometry(const odom& reading1, const odom2& reading2)
 {
 

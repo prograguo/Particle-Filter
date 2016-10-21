@@ -20,6 +20,8 @@ namespace str
 		}
 	};
 
+	//Define a collection of particles 
+	typedef std::vector<particle> particles;
 	// Tuning parameters for the particle filter
 
 	//TODO(ALL): Add tuning parameters for other parts of the filter
