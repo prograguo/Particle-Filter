@@ -44,6 +44,13 @@ target_link_libraries(test_ray_tracer
 	${Boost_LIBRARIES}
 	)
 
+add_executable(test_observation_model
+	src/test_observation_model.cpp
+	)
+target_link_libraries(test_observation_model
+	${Boost_LIBRARIES}
+	)
+
 add_executable(persistant_map
 	src/persistant_map.cpp 
 	)

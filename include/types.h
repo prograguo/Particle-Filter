@@ -6,7 +6,7 @@
 namespace str
 {
 
-	const int MAX_RANGE = 8183; // empirically determined
+	const int MAX_RANGE = 8192; // empirically determined
 
 	/*
 	Entry Type #1 (odometry):
@@ -44,6 +44,16 @@ namespace str
 		std::vector<int> r;
 		double ts;
 	};
+
+	// Parameters used in the sensor model
+	struct sensor_model_params {
+		double uniformParam;
+		double decayScale;
+		double decayRate;
+		double maxParam;
+		double rangeSTD;
+	};
+
 
 } // ns str
 

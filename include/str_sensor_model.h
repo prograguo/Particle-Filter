@@ -10,6 +10,39 @@
 
 namespace str{
 
+	class SensorModel
+	{
+		double expDecayFunction[MAX_RANGE];
+		double gaussianFunction[MAX_RANGE];
+		double maxFunction;
+		double uniformParam;
+	public:
+		SensorModel(sensor_model_params sensorParams)
+		{
+			// construct each of the function individually
+			for(int i = 0; i < MAX_RANGE; i++)
+			{
+				expDecayFunction[i] = sensorParams.decayScale*exp(-sensorParams.decayRate*double(i));
+
+				double sigSq = pow(sensorParams.rangeSTD, 2);
+				gaussianFunction[i] = 1.0 / pow(2.0*sigSq*M_PI, -0.5) *
+					exp(-1.0* pow(double(i), 2)/ (2.0*sigSq));
+			}
+			maxFunction = sensorParams.maxParam;
+			uniformParam = sensorParams.uniformParam;
+		}
+
+		double getObservationProbability(int rangeMean, int rangeObserved)
+		{
+			double result;
+			if(rangeMean == MAX_RANGE-1)
+				result += maxFunction;
+			result += expDecayFunction[rangeMean] + uniformParam + gaussianFunction[abs(rangeObserved - rangeMean)];
+			return result;
+		}
+
+	};
+
 std::vector<double>
  generateSensorModel(
 	double uniformParam,

@@ -43,18 +43,25 @@ int main()
     //     };
     str::RayTracer RT;
     // RT.populateRangeCache(map);
-    // 
+
+    
+
+
     map_type costMap;
 
     // TEST MAP:
     // char datLoc[] = "data/map/test_ray_tracer.dat";
     // int val = read_beesoft_map(datLoc, &costMap);
-    // std::vector<double> v = RT.getRangesFromPoint(costMap, std::pair<int,int>(4,8-3));
+    // str::particle p(4, 5, 0);
+    // std::vector<double> v;
+    // RT.getRangesFromPoint(costMap, p, v);
 
     // WEAN:
     char datLoc[] = "data/map/wean.dat";
     int val = read_beesoft_map(datLoc, &costMap);
-    std::vector<double> v = RT.getRangesFromPoint(costMap, std::pair<int,int>(230,415));
+    str::particle p(230, 415, 0);
+    std::vector<double> v;
+    RT.getRangesFromPoint(costMap, p, v);
     // printv(v);
 
 

@@ -5,13 +5,11 @@
 #include <vector>
 #include <cmath>
 #include <unordered_map>
+
 #include "bee-map.h"
+#include "particle.h"
 
 #define MAX_DEGREES 360
-
-// TODO(Tushar): Remove afer using Map structure
-#define R 8
-#define C 11
 
 namespace str {
     
@@ -36,6 +34,11 @@ namespace str {
     bool isObstacle(double value)
     {
         return value > 0.5;
+    }
+
+    std::pair<int,int> cmToMapCoordinates(int x_cm, int y_cm)
+    {
+        return std::pair<int,int>(x_cm, y_cm);
     }
     //
     // Helper functions end
@@ -82,6 +85,11 @@ namespace str {
             }
         }
 
+        void clearRangeCache()
+        {
+            range_cache.clear();
+        }
+
         // Set StepXY for ray tracing based on the quadrant of the ray
         void setStepXY(double theta, int &stepX, int &stepY)
         {
@@ -110,85 +118,99 @@ namespace str {
         }
 
         // Populate the cache and return the ranges from the particle/point
-        std::vector<double> getRangesFromPoint(map_type &map, std::pair<int,int> point)
+        void getRangesFromPoint(map_type &map, particle &p, std::vector<double> &ranges) //std::pair<int,int> point)
         {
-            // TODO Use from Map structure
-            int map_size_x = map.size_x;
-            int map_size_y = map.size_y;
+            std::pair<int,int> point = cmToMapCoordinates(p.x_cm, p.y_cm);
 
-            int stepX = 1;
-            int stepY = 1;
-
-            std::vector<double> ranges(MAX_DEGREES, -1);
-            for(int theta=0; theta<MAX_DEGREES; theta++)
+            ranges.reserve(MAX_DEGREES);
+            // Check if value exists in the cache
+            auto cached_value = range_cache.find(point);
+            if(cached_value != range_cache.end()) // Exists in cache
             {
-                angle_data &d = angle_cache[theta];
-                int X = point.first;
-                int Y = point.second;
-                double tmaxX = d.tmaxX;
-                double tmaxY = d.tmaxY;
-                double range_x = 0;
-                double range_y = 0;
-                setStepXY(theta, stepX, stepY);
-                
-                while(true)
-                {
-                    // std::cout<<"theta: "<<theta<<", tmaxX "<<tmaxX<<", tmaxy "<<tmaxY<<", deltax "<<d.tDeltaX<<", deltay "<<d.tDeltaY<<", range: "<<range_x<<'\n';
-                    if(tmaxX < tmaxY)
-                    {
-                        tmaxX += d.tDeltaX;
-                        range_x += d.tDeltaX;
-                        X += stepX;
-                    }
-                    else
-                    {
-                        tmaxY += d.tDeltaY;
-                        range_y += d.tDeltaY;
-                        Y += stepY;
-                    }
-                    if(!(X>=0 && X<map_size_x && Y>=0 && Y<map_size_y))
-                        break;
-                    // TODO(Tushar) handle 0.5, -1 probability
-                    if(isObstacle(map.prob[X][Y]))
-                        break;
-                }
-                // std::cout<<"theta: "<<theta<<", end point: "<<X<<", "<<Y<<'\n';
-                
-                // Select accurate range based on the octant. Option 3 is independent of Octant
-                switch((theta%180)/45)
-                {
-                    case 0:
-                    case 3:
-                        // Options:
-                        // ranges[theta] = range_x - 0.5; 
-                        // ranges[theta] = (abs(X-point.first)*angle_cache[theta].tDeltaX) - 0.5;
-                        ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second)) - 0.5;
-                        break;
-                    case 1:
-                    case 2:
-                        // Options:
-                        // ranges[theta] = range_y - 0.5;
-                        // ranges[theta] = (abs(Y-point.second)*angle_cache[theta].tDeltaY) - 0.5;
-                        ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second))  - 0.5;
-                        break;
-                }
-                // cout<<"theta: "<<theta<<" stop point "<<Y<<", "<<X<<"range is "<<ranges[theta]<<'\n';
-
+                std::cout<<"Range cache hit\n";
+                ranges = cached_value->second;
             }
-            range_cache[point] = ranges;
-            return ranges;
+            else
+            {
+                int map_size_x = map.size_x;
+                int map_size_y = map.size_y;
+
+                int stepX = 1;
+                int stepY = 1;
+                ranges.reserve(MAX_DEGREES);
+                for(int theta=0; theta<MAX_DEGREES; theta++)
+                {
+                    angle_data &d = angle_cache[theta];
+                    int X = point.first;
+                    int Y = point.second;
+                    double tmaxX = d.tmaxX;
+                    double tmaxY = d.tmaxY;
+                    double range_x = 0;
+                    double range_y = 0;
+                    setStepXY(theta, stepX, stepY);
+                    
+                    while(true)
+                    {
+                        // std::cout<<"theta: "<<theta<<", tmaxX "<<tmaxX<<", tmaxy "<<tmaxY<<", deltax "<<d.tDeltaX<<", deltay "<<d.tDeltaY<<", range: "<<range_x<<'\n';
+                        if(tmaxX < tmaxY)
+                        {
+                            tmaxX += d.tDeltaX;
+                            range_x += d.tDeltaX;
+                            X += stepX;
+                        }
+                        else
+                        {
+                            tmaxY += d.tDeltaY;
+                            range_y += d.tDeltaY;
+                            Y += stepY;
+                        }
+                        if(!(X>=0 && X<map_size_x && Y>=0 && Y<map_size_y))
+                            break;
+                        // TODO(Tushar) handle 0.5, -1 probability
+                        if(isObstacle(map.prob[X][Y]))
+                            break;
+                    }
+                    // std::cout<<"theta: "<<theta<<", end point: "<<X<<", "<<Y<<'\n';
+                    
+                    // Select accurate range based on the octant. Option 3 is independent of Octant
+                    switch((theta%180)/45)
+                    {
+                        case 0:
+                        case 3:
+                            // Options:
+                            // ranges[theta] = range_x - 0.5; 
+                            // ranges[theta] = (abs(X-point.first)*angle_cache[theta].tDeltaX) - 0.5;
+                            ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second)) - 0.5;
+                            break;
+                        case 1:
+                        case 2:
+                            // Options:
+                            // ranges[theta] = range_y - 0.5;
+                            // ranges[theta] = (abs(Y-point.second)*angle_cache[theta].tDeltaY) - 0.5;
+                            ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second))  - 0.5;
+                            break;
+                    }
+                    // cout<<"theta: "<<theta<<" stop point "<<Y<<", "<<X<<"range is "<<ranges[theta]<<'\n';
+
+                }
+                range_cache[point] = ranges;
+            }
         }
 
+        // TODO(Tushar) Convert to particle struct
         // Force populate the cache
-        void populateRangeCache(map_type &map)
-        {
-            for(int i=0; i<map.size_y; i+=5)
-                for(int j=0; j<map.size_x; j+=5)
-                {
-                    if( !isObstacle(map.prob[i][j]) )
-                        getRangesFromPoint(map, std::pair<int, int>(i,j));
-                }
-        }
+        // void populateRangeCache(map_type &map)
+        // {
+        //     for(int i=0; i<map.size_y; i+=5)
+        //         for(int j=0; j<map.size_x; j+=5)
+        //         {
+        //             if( !isObstacle(map.prob[i][j]) )
+        //             {
+        //                 std::vector<double> ranges;
+        //                 getRangesFromPoint(map, std::pair<int, int>(i,j), ranges);
+        //             }
+        //         }
+        // }
 
     };
 } // end ns str
