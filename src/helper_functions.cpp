@@ -8,6 +8,9 @@ namespace str
 	namespace
 	{
 		const double PI =3.141592653;
+		// std::default_random_engine e;
+		// std::gaussian_int_distribution<> d();
+		// std::function<float<>> gaussian_sampling = std::binf(d,e);
 	}
 	bool check_angle(const float &angle)
 	{
