@@ -1,5 +1,5 @@
-#ifndef __helper_functions__
-#define __helper_functions__
+#ifndef __str_helper_functions__
+#define __str_helper_functions__
 
 // File that contains helper functions, useful accross all files
 
@@ -21,16 +21,7 @@ float angle_degree_to_radians(const float angle_deg);
 float sample_from_gaussian(float variance);
 
 std::vector<std::pair<double,double>>
-range2Point(std::vector<int>& ranges){
-	std::vector<std::pair<double,double>> xy;
-	for(int i = 0 ; i < ranges.size(); i++)
-	{
-		double rad = double(i)*M_PI/180.0;
-		std::pair<double, double> pt(cos(rad)*ranges[i], sin(rad)*ranges[i]);
-		xy.push_back(pt);
-	}
-	return xy;
-};
+		range2Point(const std::vector<int>& ranges);
 
 } // sn str
 

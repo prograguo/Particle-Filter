@@ -1,3 +1,5 @@
+#ifndef __str__particle__
+#define __str__particle__
 // Definition of the attributes of a particle
 
 namespace str
@@ -33,3 +35,4 @@ namespace str
 	};
 
 }//end namespace str
+#endif

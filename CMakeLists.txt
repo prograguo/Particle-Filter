@@ -33,6 +33,7 @@ include_directories(
 
 add_executable(robot_viz_test
 	src/robot_viz_test.cpp 
+	src/helper_functions.cpp
 	)
 target_link_libraries(robot_viz_test
 	${Boost_LIBRARIES}
@@ -44,12 +45,6 @@ target_link_libraries(test_ray_tracer
 	${Boost_LIBRARIES}
 	)
 
-add_executable(persistant_map
-	src/persistant_map.cpp 
-	)
-target_link_libraries(persistant_map
-	${Boost_LIBRARIES}
-	)
 
 
 add_executable(libconfig_example
@@ -61,22 +56,12 @@ target_link_libraries(libconfig_example
 	)
 
 add_executable(sfml_example
-	src/sfml_example.cpp 
+	src/sfml_example.cpp
+	src/grapher.cpp
+	src/helper_functions.cpp
 	)
 target_link_libraries(sfml_example
 	${Boost_LIBRARIES}
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
-	)
-
-
-################################################
-## Example executeable for gnuplot-iostream test
-################################################
-add_executable(example-data-2d
-	src/example-data-2d.cpp
-	include/gnuplot-iostream.h  
-	)
-target_link_libraries(example-data-2d 
-	${Boost_LIBRARIES}
 	)
