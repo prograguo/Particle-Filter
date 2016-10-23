@@ -15,9 +15,9 @@ namespace str
 	ts - timestamp of odometry reading (0 at start of run)
 	*/
 	struct odom{
-		double x;
-		double y;
-		double theta;
+		double x_cm;
+		double y_cm;
+		double theta_deg;
 		double ts;
 	};
 

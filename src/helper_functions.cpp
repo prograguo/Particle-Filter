@@ -8,6 +8,8 @@ namespace str
 	namespace
 	{
 		const double PI =3.141592653;
+		
+		std::mt19937 mt(1729);
 		// std::default_random_engine e;
 		// std::gaussian_int_distribution<> d();
 		// std::function<float<>> gaussian_sampling = std::binf(d,e);
@@ -37,7 +39,7 @@ namespace str
 		return (angle_deg*PI)/180;
 	}
 
-
+	//Approximate Gaussian Sampling
 	float sample_from_gaussian(float variance)
 	{	
 		srand (time(NULL));
@@ -47,6 +49,13 @@ namespace str
 			sum+= (2*double(std::rand())/RAND_MAX)-1;
 		}
 		return (variance/6.0)*sum;
+	}
+
+	//Gaussian sampling from more accurate distribution
+	float sample_from_gaussian(float mean, float variance)
+	{
+		std::normal_distribution<float> gauss(mean,variance);
+		return gauss(mt);
 	}
 
 	std::vector<std::pair<double,double>>

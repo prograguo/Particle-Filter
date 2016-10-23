@@ -1,5 +1,7 @@
 #ifndef __str__particle__
 #define __str__particle__
+
+#include <vector>
 // Definition of the attributes of a particle
 
 namespace str
@@ -24,17 +26,6 @@ namespace str
 
 	//Define a collection of particles 
 	typedef std::vector<particle> particles;
-	// Tuning parameters for the particle filter
-
-	//TODO(ALL): Add tuning parameters for other parts of the filter
-	struct params
-	{
-		// Noise Parameters for the motion model
-		float alpha1=0.1;
-		float alpha2=0.1;
-		float alpha3=0.1;
-		float alpha4=0.1;
-	};
 
 }//end namespace str
 #endif

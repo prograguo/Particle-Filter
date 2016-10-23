@@ -26,13 +26,15 @@ include_directories(
 	${SFML_INCLUDE_DIRS})
 
 
-
 ################################################
 ## Test Executable to stream sensor data
 ################################################
 
 add_executable(robot_viz_test
 	src/robot_viz_test.cpp 
+	src/str_io.cpp
+	src/str_sensor_model.cpp
+	src/bee-map.cpp
 	src/helper_functions.cpp
 	)
 target_link_libraries(robot_viz_test
@@ -49,6 +51,9 @@ target_link_libraries(test_ray_tracer
 
 add_executable(libconfig_example
 	src/libconfig_example.cpp 
+	src/str_sensor_model.cpp
+	src/bee-map.cpp
+	src/str_io.cpp
 	)
 target_link_libraries(libconfig_example
 	${Boost_LIBRARIES}
@@ -58,10 +63,27 @@ target_link_libraries(libconfig_example
 add_executable(sfml_example
 	src/sfml_example.cpp
 	src/grapher.cpp
+	src/bee-map.cpp
 	src/helper_functions.cpp
+	src/str_io.cpp
 	)
 target_link_libraries(sfml_example
 	${Boost_LIBRARIES}
+	${LIBCONFIGPP_LIBRARIES}
+	${SFML_LIBRARIES}
+	)
+
+add_executable(particle_filter_test
+	src/particle_filter_test.cpp
+	src/helper_functions.cpp
+	src/particle_filter.cpp
+	src/str_motion_model.cpp
+	src/str_io.cpp
+	src/str_sensor_model.cpp
+	src/bee-map.cpp
+	)
+
+target_link_libraries(particle_filter_test
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
 	)

@@ -1,8 +1,11 @@
 #ifndef __MOTION_MODEL__
 #define __MOTION_MODEL__
 
+#include <libconfig.h++>
+
 #include "particle.h"
 #include "types.h"
+#include "helper_functions.h"
 
 namespace str
 {
@@ -13,13 +16,16 @@ namespace str
 	{
 	public:
 
-		motion_model(const params parameters);
+		motion_model(libconfig::Config &cfg);
 
-		void propagate_particle(particle& particle);
+		void propagate_particles(particles& init_particles);
 
-		void update_odometry(const odom& reading1, const odom2& reading2);
+		void update_odometry(const odom& reading);
 
 	private:
+
+		// Current Odometry Reading
+		odom current_reading_;
 
 		//Perturbation for the first rotation to align with the translation axis
 		float theta1_rad = 0;
@@ -31,7 +37,11 @@ namespace str
 		float theta2_rad = 0;
 
 		//Tuning parameters
-		params params_;
+		float alpha1_;
+		float alpha2_;
+		float alpha3_;
+		float alpha4_;
+
 
 
 	};
