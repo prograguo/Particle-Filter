@@ -22,7 +22,7 @@ namespace str
 class particle_filter
 {
 public:
-	particle_filter(libconfig::Config &cfg);
+	particle_filter(libconfig::Config &cfg,odom &inital_odom);
 	void filter_update(odom odometry_reading, laser laser_reading);
 
 private:

@@ -8,9 +8,9 @@
 namespace str
 {
 
-particle_filter::particle_filter(libconfig::Config &cfg)
+particle_filter::particle_filter(libconfig::Config &cfg, odom &initial_odom)
 {	
-	motion_model_=std::make_shared<motion_model>(motion_model(cfg));
+	motion_model_=std::make_shared<motion_model>(motion_model(cfg,initial_odom));
 }
 
 void particle_filter::filter_update(odom odometry_reading, laser laser_reading)
@@ -43,16 +43,16 @@ void particle_filter::resample(particles& new_particles)
 
 	
 	unsigned int num_draws = particle_set_.size();
-	float num_draws_inv = 1.0/num_draws;
+	double num_draws_inv = 1.0/num_draws;
 
 	// Generate a random number between 0 and num_draws_inv
-	float random_number = (std::rand()/RAND_MAX)*num_draws_inv;
+	double random_number = (std::rand()/RAND_MAX)*num_draws_inv;
 
 	//First Weight 
-	float w  = particle_set_.front().weight;
+	double w  = particle_set_.front().weight;
 
 	// Upper bound for resampling
-	float upper_bound = 0;
+	double upper_bound = 0;
 
 	unsigned int i= 0;
 

@@ -9,9 +9,9 @@ namespace str
 	// Contain location and orientation of a particle
 	struct particle
 	{
-		unsigned int x_cm;
-		unsigned int y_cm;
-		float theta_deg;
+		double x_cm;
+		double y_cm;
+		double theta_deg;
 
 		double weight;
 

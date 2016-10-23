@@ -65,6 +65,7 @@ add_executable(sfml_example
 	src/grapher.cpp
 	src/bee-map.cpp
 	src/helper_functions.cpp
+	src/str_motion_model.cpp
 	src/str_io.cpp
 	)
 target_link_libraries(sfml_example

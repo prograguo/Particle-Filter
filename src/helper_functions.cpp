@@ -14,12 +14,12 @@ namespace str
 		// std::gaussian_int_distribution<> d();
 		// std::function<float<>> gaussian_sampling = std::binf(d,e);
 	}
-	bool check_angle(const float &angle)
+	bool check_angle(const double &angle)
 	{
 		return (angle>-PI && angle <PI);
 	}
 
-	void trim_angle_radians(float &angle)
+	void trim_angle_radians(double &angle)
 	{	
 		int sign = angle >=0 ? 1:-1;
 
@@ -29,18 +29,18 @@ namespace str
 		}
 	}
 
-	float angle_radians_to_degree(const float angle_rad)
+	double angle_radians_to_degree(const double angle_rad)
 	{
 		return (angle_rad*180)/PI;
 	}
 
-	float angle_degree_to_radians(const float angle_deg)
+	double angle_degree_to_radians(const double angle_deg)
 	{
 		return (angle_deg*PI)/180;
 	}
 
 	//Approximate Gaussian Sampling
-	float sample_from_gaussian(float variance)
+	double sample_from_gaussian(double variance)
 	{	
 		srand (time(NULL));
 		float sum=0;
@@ -52,7 +52,7 @@ namespace str
 	}
 
 	//Gaussian sampling from more accurate distribution
-	float sample_from_gaussian(float mean, float variance)
+	double sample_from_gaussian(double mean, double variance)
 	{
 		std::normal_distribution<float> gauss(mean,variance);
 		return gauss(mt);

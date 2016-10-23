@@ -20,6 +20,7 @@
 #include "helper_functions.h"
 #include "grapher.h"
 #include "particle.h"
+#include "str_motion_model.h"
 
 #include "bee-map.h"
 #include "bee-map-impl.h"
@@ -41,40 +42,61 @@ int main() {
 	// populate the vertex array, with one quad per tile
 	for (unsigned int i = 0; i < width; ++i)
 	{
-	  for (unsigned int j = 0; j < height; ++j)
-	  {
-	  	if(costMap.prob[i][j] == 0){
-	  		freeSpace.push_back(std::pair<int, int>(i,j));
-	  	}
-	  }
+		for (unsigned int j = 0; j < height; ++j)
+		{
+			if(costMap.prob[i][j] == 0){
+				freeSpace.push_back(std::pair<int, int>(i,j));
+			}
+		}
 	}
 
 	int N_Particles = 1000;
 	std::vector<str::particle> particleSet;
 	for (unsigned int i = 0; i < N_Particles; i++)
 	{
-		std::pair<int, int> pt;
-		int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
-		pt = freeSpace[r_pt];
-		str::particle newParticle(pt.first, pt.second, 0);
-		particleSet.push_back(newParticle);
+		particleSet.push_back(str::particle(400,0,0));
+		// std::pair<int, int> pt;
+		// int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
+		// pt = freeSpace[r_pt];
+		// str::particle newParticle(pt.first, pt.second, 0);
+		// particleSet.push_back(newParticle);
 	}
 
 	str::Grapher grapher(width, width);
 	grapher.setMap(costMap.prob);
 
-	for(int i = 0; i < laserData.size(); i++)
-	{
-		grapher.setParticlePoints(particleSet);
-		grapher.setLaserLines(laserData[i].r, 300, 300);
-		grapher.updateGraphics();
+	libconfig::Config cfg;
+	try{
+		cfg.readFile("config/params.cfg");
+	}catch(const libconfig::FileIOException &fioex){
+		std::cerr << "I/O error while reading file\n";
+		return 0
+		;	}catch(const libconfig::ParseException &pex){
+			std::cerr << "Parse error at " << pex.getFile() <<
+			":" << pex.getLine() << " - " << pex.getError() << "\n";
+			return 0;
+		}
+
+		str::odom initial={0,0,0,0};
+
+		str::motion_model m_model(cfg,initial);
+
+
+		// for(int i = 0; i < laserData.size(); i++)
+		// {	
+		// 	grapher.setParticlePoints(particleSet);
+		// 	grapher.setLaserLines(laserData[i].r, 300, 300);
+		// 	grapher.updateGraphics();
+		// }
+
+		for (size_t i=0;i<1000;++i)
+		{
+			m_model.update_odometry(initial);
+			m_model.propagate_particles(particleSet);	
+			grapher.setParticlePoints(particleSet);
+			grapher.updateGraphics();
+
+		}	
+
+		return 0;
 	}
-
-
-
- 
-
-
-
-	return 0;
-}
