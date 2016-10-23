@@ -66,21 +66,24 @@ int main() {
 
 	libconfig::Config cfg;
 	cfg.readFile("config/params.cfg");
-	str::motion_model motionModel(cfg);
+
+	str::odom initial=odomData[0];
+	str::motion_model motionModel(cfg,initial);
 
 	for(int i = 0; i < laserData.size()-5; i++)
 	{
 		std::cout << "iteration: " << i << "\n";
 
-		//motionModel.update_odometry(odomData[i]);
-		//motionModel.propagate_particles(particleSet);
+		motionModel.update_odometry(odomData[i]);
+		motionModel.propagate_particles(particleSet);
+		std::cout<<particleSet.front().x_cm;
 
-		grapher.setMeasuredRanges(laserData[i].r);
-		grapher.setPredictedRanges(laserData[i+4].r);
-		grapher.updateSensorGraphics();
+		// grapher.setMeasuredRanges(laserData[i].r);
+		// grapher.setPredictedRanges(laserData[i+4].r);
+		// grapher.updateSensorGraphics();
 
-		//grapher.setParticlePoints(particleSet);
-		//grapher.setLaserLines(laserData[i].r, 300, 300);
+		grapher.setParticlePoints(particleSet);
+		grapher.setLaserLines(laserData[i].r, 300, 300);
 		grapher.updateGraphics();
 	}
 

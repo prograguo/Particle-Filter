@@ -21,11 +21,11 @@ namespace str
 		for (auto& curr_particle:init_particles)
 		{
 		//Calculate normally distributed perturbations
-		double theta1_rad = theta1_rad_ - sample_from_gaussian(alpha1_*theta1_rad_ + alpha2_*translation_cm_);
+		double theta1_rad = theta1_rad_ - sample_from_gaussian(0,alpha1_*theta1_rad_ + alpha2_*translation_cm_);
 
-		double translation_cm = translation_cm_ - sample_from_gaussian(alpha3_*translation_cm_ + alpha4_*(theta1_rad_+theta2_rad_));   
+		double translation_cm = translation_cm_ - sample_from_gaussian(0,alpha3_*translation_cm_ + alpha4_*(theta1_rad_+theta2_rad_));   
 
-		double theta2_rad = theta2_rad_ - sample_from_gaussian(alpha1_*theta2_rad_ + alpha2_*translation_cm_);
+		double theta2_rad = theta2_rad_ - sample_from_gaussian(0,alpha1_*theta2_rad_ + alpha2_*translation_cm_);
 			
 		curr_particle.x_cm+= translation_cm * std::cos(curr_particle.theta_deg + theta1_rad);
 		curr_particle.y_cm+= translation_cm * std::sin(curr_particle.theta_deg + theta1_rad);
