@@ -22,6 +22,8 @@ double sample_from_gaussian(double variance);
 
 double sample_from_gaussian(double mean, double variance);
 
+float sample_from_gaussian2(float mean, float variance);
+
 std::vector<std::pair<double,double>>
 		range2Point(const std::vector<int>& ranges);
 

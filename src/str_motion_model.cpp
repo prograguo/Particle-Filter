@@ -1,5 +1,5 @@
 #include "str_motion_model.h"
-
+#include "helper_functions.h"
 #include <cmath>
 #include <libconfig.h++>
 
@@ -54,7 +54,6 @@ namespace str
 			trim_angle_radians(theta2_rad_);
 		}
 
-	
 	//Update the final odometry value
 		current_reading_ = reading;
 	}

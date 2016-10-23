@@ -21,6 +21,28 @@ str::Grapher::Grapher(int gridSize, int windowSize):
 
 }
 
+str::Grapher::Grapher(int gridSize, int windowSize, int sensorWindowSize):
+	sfMapArray(sf::Quads, 4*gridSize*gridSize),
+	sfWindow(sf::VideoMode(windowSize, windowSize), "Map"),
+	sfSensorWindow(sf::VideoMode(sensorWindowSize, sensorWindowSize), "Sensor")
+{
+	m_windowSize = windowSize;
+	m_gridSize = gridSize;
+	m_cellSize = m_windowSize / m_gridSize;
+
+	std::cout << "Window is set to " << m_windowSize
+		<< " and cell size is " << m_cellSize << "\n";
+	
+	m_radius = 2;
+	sfCentroid.setRadius(m_cellSize*m_radius);
+	sfCentroid.setPointCount(4); // Cosmetic, number of edges of circle
+	sfCentroid.setFillColor(sf::Color::Green);
+		// sf::VertexArray lArray(sf::Lines, 180*2);
+
+	m_sensorWindowSize = sensorWindowSize;
+
+}
+
 
 bool str::Grapher::setMap(float** map)
 {
@@ -45,7 +67,7 @@ bool str::Grapher::setMap(float** map)
 }
 
 bool str::Grapher::setParticlePoints(
-	const std::vector<particle>& particles)
+	const str::particles& particles)
 {
 	sfParticleArray.clear();
 	sfParticleArray.reserve(particles.size());
@@ -59,9 +81,6 @@ bool str::Grapher::setParticlePoints(
 		xsum += particles[i].x_cm;
 		ysum += particles[i].y_cm;
 	}
-
-	sfCentroid.setPosition(
-		sf::Vector2f(xsum / particles.size(), ysum / particles.size() ));
 }
 
 bool str::Grapher::setLaserLines(
@@ -87,6 +106,11 @@ bool str::Grapher::setLaserLines(
 	return true;
 }
 
+void str::Grapher::setCentroid(int xc, int yc)
+{
+	sfCentroid.setPosition(sf::Vector2f(xc, yc) );
+}
+
 void str::Grapher::updateGraphics()
 {
 	sfWindow.clear();
@@ -96,4 +120,57 @@ void str::Grapher::updateGraphics()
   sfWindow.draw(&sfLaserArray[0],sfLaserArray.size(), sf::Lines);
   
   sfWindow.display();
+}
+
+bool str::Grapher::setMeasuredRanges(const std::vector<int>& ranges)
+{
+	sfMeasRanges.clear();
+	sfMeasRanges.reserve(ranges.size());
+
+	std::vector<std::pair<double,double>> xy;
+	xy = range2Point(ranges);
+
+	double scale = m_sensorWindowSize/800.0 / 5.0; // Sorry for magic scale factor
+	std::cout << "Scale factor is " << scale << "\n";
+	for(int i = 0; i < ranges.size(); i++)
+	{
+		sf::Vertex vert;
+		vert.position = sf::Vector2f(
+			xy[i].first*scale + m_sensorWindowSize/2, 
+			xy[i].second*scale + m_sensorWindowSize/4);
+		vert.color = sf::Color::Blue;
+		sfMeasRanges.push_back(vert);
+	}
+	return true;
+}
+
+bool str::Grapher::setPredictedRanges(const std::vector<int>& ranges)
+{
+
+	sfPredRanges.clear();
+	sfPredRanges.reserve(ranges.size());
+
+	std::vector<std::pair<double,double>> xy;
+	xy = range2Point(ranges);
+
+	double  scale = m_sensorWindowSize/800.0 / 5.0; // Sorry for magic scale factor
+	for(int i = 0; i < ranges.size(); i++)
+	{
+		sf::Vertex vert;
+		vert.position = sf::Vector2f(
+			xy[i].first*scale + m_sensorWindowSize/2, 
+			xy[i].second*scale + m_sensorWindowSize/4);
+		vert.color = sf::Color::Red;
+		sfPredRanges.push_back(vert);
+	}
+	return true;
+}
+
+void str::Grapher::updateSensorGraphics()
+{
+	sfSensorWindow.clear();
+  sfSensorWindow.draw(&sfPredRanges[0], sfPredRanges.size(), sf::Points);
+  sfSensorWindow.draw(&sfMeasRanges[0], sfMeasRanges.size(), sf::Points);
+  
+  sfSensorWindow.display();
 }
