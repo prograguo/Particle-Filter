@@ -65,3 +65,15 @@ target_link_libraries(sfml_example
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
 	)
+
+add_executable(motion_model_test
+	src/test/motion_model_test.cpp
+	src/grapher.cpp
+	src/helper_functions.cpp
+	src/str_motion_model.cpp
+	)
+target_link_libraries(motion_model_test
+	${Boost_LIBRARIES}
+	${LIBCONFIGPP_LIBRARIES}
+	${SFML_LIBRARIES}
+	)

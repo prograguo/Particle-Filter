@@ -17,7 +17,7 @@ namespace str
 
 		void propagate_particle(particle& particle);
 
-		void update_odometry(const odom& reading1, const odom2& reading2);
+		void update_odometry(const odom& reading1, const odom& reading2);
 
 	private:
 

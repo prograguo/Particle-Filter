@@ -1,5 +1,6 @@
 //Definition of helper functions used for the filter
 #include <random>
+#include <chrono>
 #include "helper_functions.h"
 
 
@@ -40,6 +41,11 @@ namespace str
 
 	float sample_from_gaussian(float variance)
 	{	
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		std::default_random_engine generator(seed);
+		std::normal_distribution<double> distribution(0.0,variance);
+		return distribution(generator);
+		/*
 		srand (time(NULL));
 		float sum=0;
 		for (size_t i=0;i<12;++i)
@@ -47,6 +53,7 @@ namespace str
 			sum+= (2*double(std::rand())/RAND_MAX)-1;
 		}
 		return (variance/6.0)*sum;
+		*/
 	}
 
 	std::vector<std::pair<double,double>>

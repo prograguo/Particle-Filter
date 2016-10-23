@@ -1,14 +1,15 @@
 #ifndef __str__particle__
 #define __str__particle__
 // Definition of the attributes of a particle
+#include <vector>
 
 namespace str
 {
 	// Contain location and orientation of a particle
 	struct particle
 	{
-		unsigned int x_cm;
-		unsigned int y_cm;
+		double x_cm;
+		double y_cm;
 		float theta_deg;
 
 		double weight;
@@ -30,10 +31,10 @@ namespace str
 	struct params
 	{
 		// Noise Parameters for the motion model
-		float alpha1=0.1;
-		float alpha2=0.1;
-		float alpha3=0.1;
-		float alpha4=0.1;
+		float alpha1=0.01;
+		float alpha2=0.01;
+		float alpha3=0.01;
+		float alpha4=0.01;
 	};
 
 }//end namespace str
