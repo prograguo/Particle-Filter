@@ -87,3 +87,19 @@ target_link_libraries(particle_filter_test
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
 	)
+
+add_executable(test_motion_model
+	src/test/test_motion_model.cpp
+	src/helper_functions.cpp
+	src/particle_filter.cpp
+	src/str_motion_model.cpp
+	src/str_io.cpp
+	src/str_sensor_model.cpp
+	src/bee-map.cpp
+	src/grapher.cpp
+	)
+
+target_link_libraries(test_motion_model
+	${LIBCONFIGPP_LIBRARIES}
+	${SFML_LIBRARIES}
+	)

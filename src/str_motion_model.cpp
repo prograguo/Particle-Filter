@@ -1,5 +1,5 @@
 #include "str_motion_model.h"
-
+#include "helper_functions.h"
 #include <cmath>
 #include <libconfig.h++>
 
@@ -28,12 +28,12 @@ namespace str
 	void motion_model::update_odometry(const odom& reading)
 	{
 
-		float theta1_rad = std::atan2((reading.y_cm-current_reading_.y_cm),(reading.x_cm-current_reading_.x_cm)) 
+		theta1_rad = std::atan2((reading.y_cm-current_reading_.y_cm),(reading.x_cm-current_reading_.x_cm)) 
 		                      - angle_degree_to_radians(current_reading_.theta_deg); 
 
 		float trans_cm = std::hypot((reading.y_cm-current_reading_.y_cm),(reading.x_cm-current_reading_.x_cm));
 
-		float theta2_rad = angle_degree_to_radians(reading.theta_deg - current_reading_.theta_deg);
+		theta2_rad = angle_degree_to_radians(reading.theta_deg - current_reading_.theta_deg);
 
 	// Trim the calculated angles if they are not between [-PI,PI]
 		if(!check_angle(theta1_rad))
@@ -47,11 +47,11 @@ namespace str
 		}
 
 	//Calculate normally distributed perturbations
-		theta1_rad = theta1_rad - sample_from_gaussian(alpha1_*theta1_rad + alpha2_*trans_cm);
+		theta1_rad = theta1_rad - sample_from_gaussian2(0, alpha1_*theta1_rad + alpha2_*trans_cm);
 
-		translation_cm = trans_cm - sample_from_gaussian(alpha3_*trans_cm + alpha4_*(theta1_rad+theta2_rad));   
+		translation_cm = trans_cm - sample_from_gaussian2(0, alpha3_*trans_cm + alpha4_*(theta1_rad+theta2_rad));   
 
-		theta2_rad = theta2_rad - sample_from_gaussian(alpha1_*theta2_rad + alpha2_*trans_cm);
+		theta2_rad = theta2_rad - sample_from_gaussian2(0, alpha1_*theta2_rad + alpha2_*trans_cm);
 	
 	//Update the final odometry value
 		current_reading_ = reading;

@@ -20,6 +20,8 @@ float angle_degree_to_radians(const float angle_deg);
 
 float sample_from_gaussian(float variance);
 
+float sample_from_gaussian2(float mean, float variance);
+
 std::vector<std::pair<double,double>>
 		range2Point(const std::vector<int>& ranges);
 

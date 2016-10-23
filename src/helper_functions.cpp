@@ -52,7 +52,7 @@ namespace str
 	}
 
 	//Gaussian sampling from more accurate distribution
-	float sample_from_gaussian(float mean, float variance)
+	float sample_from_gaussian2(float mean, float variance)
 	{
 		std::normal_distribution<float> gauss(mean,variance);
 		return gauss(mt);
