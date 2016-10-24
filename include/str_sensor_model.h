@@ -34,6 +34,8 @@ namespace str{
 
 		double getObservationProbability(int rangeMean, int rangeObserved)
 		{
+			if(rangeMean < 0 || rangeMean > MAX_RANGE)
+				std::cout<<"ERROR: Range mean from ray tracer is invalid: "<<rangeMean<<". Crashing..\n";
 			double result;
 			if(rangeMean == MAX_RANGE-1)
 				result += maxFunction;

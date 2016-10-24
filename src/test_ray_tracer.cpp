@@ -60,7 +60,7 @@ int main()
     char datLoc[] = "data/map/wean.dat";
     int val = read_beesoft_map(datLoc, &costMap);
     str::particle p(230, 415, 0);
-    std::vector<double> v;
+    std::vector<int> v;
     RT.getRangesFromPoint(costMap, p, v);
     // printv(v);
 

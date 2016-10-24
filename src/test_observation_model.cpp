@@ -40,6 +40,8 @@ int main()
 
     str::observation_model observationModel(sensorParams);
 
+    observationModel.forcePopulateRangeCache(costMap);
+
     str::particle p(230, 415, 0);
 
     std::vector<str::laser> laserData;
@@ -48,7 +50,6 @@ int main()
 
     for( auto it = laserData.begin(); it!= laserData.end(); it++)
     {
-        std::cout<<"here\n";
         double prob = observationModel.getProbForParticle(p, *it, costMap);
         std::cout<<"Prob for test particle is "<<prob<<'\n';
     }

@@ -8,8 +8,12 @@
 
 #include "bee-map.h"
 #include "particle.h"
+#include "types.h"
 
 #define MAX_DEGREES 360
+
+#define CACHE_RESOLUTION_X 1
+#define CACHE_RESOLUTION_Y 1
 
 namespace str {
     
@@ -20,7 +24,7 @@ namespace str {
         }
     };
     
-    typedef std::unordered_map<std::pair<int, int>, std::vector<double>, SimpleHash> range_map;
+    typedef std::unordered_map<std::pair<int, int>, std::vector<int>, SimpleHash> range_map;
     
 
     //
@@ -36,10 +40,16 @@ namespace str {
         return value > 0.5;
     }
 
-    std::pair<int,int> cmToMapCoordinates(int x_cm, int y_cm)
+    std::pair<int,int> cmToMapCoordinates(int x_cm, int y_cm, int map_res)
     {
-        return std::pair<int,int>(x_cm, y_cm);
+        return std::pair<int,int>(x_cm/map_res, y_cm/map_res);
     }
+
+    double mapToCmCoordinates(double val, int map_res)
+    {
+        return val * map_res;
+    }
+
     //
     // Helper functions end
     //
@@ -118,16 +128,16 @@ namespace str {
         }
 
         // Populate the cache and return the ranges from the particle/point
-        void getRangesFromPoint(map_type &map, particle &p, std::vector<double> &ranges) //std::pair<int,int> point)
+        void getRangesFromPoint(map_type &map, particle &p, std::vector<int> &ranges) //std::pair<int,int> point)
         {
-            std::pair<int,int> point = cmToMapCoordinates(p.x_cm, p.y_cm);
+            std::pair<int,int> point = cmToMapCoordinates(p.x_cm, p.y_cm, map.resolution);
 
-            ranges.reserve(MAX_DEGREES);
+            std::vector<int> ranges_tmp(MAX_DEGREES, -1);
             // Check if value exists in the cache
             auto cached_value = range_cache.find(point);
             if(cached_value != range_cache.end()) // Exists in cache
             {
-                std::cout<<"Range cache hit\n";
+                // std::cout<<"Range cache hit\n";
                 ranges = cached_value->second;
             }
             else
@@ -137,7 +147,7 @@ namespace str {
 
                 int stepX = 1;
                 int stepY = 1;
-                ranges.reserve(MAX_DEGREES);
+                double range_map_coords = 0;
                 for(int theta=0; theta<MAX_DEGREES; theta++)
                 {
                     angle_data &d = angle_cache[theta];
@@ -178,39 +188,43 @@ namespace str {
                         case 0:
                         case 3:
                             // Options:
-                            // ranges[theta] = range_x - 0.5; 
-                            // ranges[theta] = (abs(X-point.first)*angle_cache[theta].tDeltaX) - 0.5;
-                            ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second)) - 0.5;
+                            // range_map_coords = range_x - 0.5; 
+                            // range_map_coords = (abs(X-point.first)*angle_cache[theta].tDeltaX) - 0.5;
+                            range_map_coords = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second)) - 0.5;
                             break;
                         case 1:
                         case 2:
                             // Options:
-                            // ranges[theta] = range_y - 0.5;
-                            // ranges[theta] = (abs(Y-point.second)*angle_cache[theta].tDeltaY) - 0.5;
-                            ranges[theta] = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second))  - 0.5;
+                            // range_map_coords = range_y - 0.5;
+                            // range_map_coords = (abs(Y-point.second)*angle_cache[theta].tDeltaY) - 0.5;
+                            range_map_coords = sqrt((X-point.first)*(X-point.first) + (Y-point.second)*(Y-point.second))  - 0.5;
                             break;
                     }
-                    // cout<<"theta: "<<theta<<" stop point "<<Y<<", "<<X<<"range is "<<ranges[theta]<<'\n';
-
+                    int range_int = round(mapToCmCoordinates(range_map_coords, map.resolution));
+                    if(range_int > MAX_RANGE)
+                        range_int = MAX_RANGE;
+                    ranges_tmp[theta] = range_int;
+                    // std::cout<<"theta: "<<theta<<" stop point "<<Y<<", "<<X<<"range is "<<ranges[theta]<<'\n';
                 }
-                range_cache[point] = ranges;
+                range_cache[point] = ranges_tmp;
+                ranges = ranges_tmp;
             }
         }
 
-        // TODO(Tushar) Convert to particle struct
         // Force populate the cache
-        // void populateRangeCache(map_type &map)
-        // {
-        //     for(int i=0; i<map.size_y; i+=5)
-        //         for(int j=0; j<map.size_x; j+=5)
-        //         {
-        //             if( !isObstacle(map.prob[i][j]) )
-        //             {
-        //                 std::vector<double> ranges;
-        //                 getRangesFromPoint(map, std::pair<int, int>(i,j), ranges);
-        //             }
-        //         }
-        // }
+        void populateRangeCache(map_type &map)
+        {
+            for(int i=0; i<map.size_y; i+=CACHE_RESOLUTION_X)
+                for(int j=0; j<map.size_x; j+=CACHE_RESOLUTION_Y)
+                {
+                    if( !isObstacle(map.prob[i][j]) )
+                    {
+                        std::vector<int> ranges;
+                        particle p(i, j, 0);
+                        getRangesFromPoint(map, p, ranges);
+                    }
+                }
+        }
 
     };
 } // end ns str
