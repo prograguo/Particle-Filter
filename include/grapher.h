@@ -7,6 +7,7 @@
 #include "particle.h"
 
 namespace str{
+
 class Grapher{
 
 private:
@@ -15,7 +16,8 @@ private:
 	int m_radius;
 	int m_windowSize;
 	sf::VertexArray sfMapArray;
-	std::vector<sf::Vertex> sfParticleArray;
+	std::vector<sf::CircleShape> sfParticleShapeArray;
+	std::vector<sf::Vertex> sfParticleDirArray;
 	std::vector<sf::Vertex> sfLaserArray;
 	sf::CircleShape sfCentroid;
 	sf::RenderWindow sfWindow;
@@ -37,6 +39,8 @@ public:
 
 	// Create particle vector array from custom particle structure
 	bool setParticlePoints(const str::particles& particles);
+	bool setParticlePoints(const str::particles& particles, 
+		double m_len, double m_size);
 
 	// Create laser vector array from laser readings
 	bool setLaserLines(std::vector<int>& ranges, int xc, int yc);

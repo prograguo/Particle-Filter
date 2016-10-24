@@ -27,11 +27,29 @@ include_directories(
 
 
 ################################################
-## Test Executable to stream sensor data
+## Main executable 
+################################################
+
+add_executable(run_particle_filter
+	src/run_particle_filter.cpp
+	src/grapher.cpp
+	src/bee-map.cpp
+	src/helper_functions.cpp
+	src/str_motion_model.cpp
+	src/str_io.cpp
+	)
+target_link_libraries(run_particle_filter
+	${Boost_LIBRARIES}
+	${LIBCONFIGPP_LIBRARIES}
+	${SFML_LIBRARIES}
+	)
+
+################################################
+## Tests 
 ################################################
 
 add_executable(robot_viz_test
-	src/robot_viz_test.cpp 
+	src/test/robot_viz_test.cpp 
 	src/str_io.cpp
 	src/str_sensor_model.cpp
 	src/bee-map.cpp
@@ -41,7 +59,7 @@ target_link_libraries(robot_viz_test
 	${Boost_LIBRARIES}
 	)
 add_executable(test_ray_tracer
-	src/test_ray_tracer.cpp
+	src/test/test_ray_tracer.cpp
 	src/str_io.cpp
 	src/bee-map.cpp
 	)
@@ -50,7 +68,7 @@ target_link_libraries(test_ray_tracer
 	)
 
 add_executable(test_observation_model
-	src/test_observation_model.cpp
+	src/test/test_observation_model.cpp
 	src/helper_functions.cpp
 	src/str_io.cpp
 	src/bee-map.cpp
@@ -61,29 +79,20 @@ target_link_libraries(test_observation_model
 	${SFML_LIBRARIES}
 	)
 
-add_executable(persistant_map
-	src/persistant_map.cpp 
-	src/str_io.cpp
-	src/bee-map.cpp
-	)
-target_link_libraries(persistant_map
-	${Boost_LIBRARIES}
-	)
 
-
-add_executable(libconfig_example
-	src/libconfig_example.cpp 
-	src/str_sensor_model.cpp
-	src/bee-map.cpp
-	src/str_io.cpp
-	)
-target_link_libraries(libconfig_example
-	${Boost_LIBRARIES}
-	${LIBCONFIGPP_LIBRARIES}
-	)
+#add_executable(libconfig_example
+#	src/libconfig_example.cpp 
+#	src/str_sensor_model.cpp
+#	src/bee-map.cpp
+#	src/str_io.cpp
+#	)
+#target_link_libraries(libconfig_example
+#	${Boost_LIBRARIES}
+#	${LIBCONFIGPP_LIBRARIES}
+#	)
 
 add_executable(sfml_example
-	src/sfml_example.cpp
+	src/test/sfml_example.cpp
 	src/grapher.cpp
 	src/bee-map.cpp
 	src/helper_functions.cpp
@@ -97,7 +106,7 @@ target_link_libraries(sfml_example
 	)
 
 add_executable(particle_filter_test
-	src/particle_filter_test.cpp
+	src/test/particle_filter_test.cpp
 	src/helper_functions.cpp
 	src/particle_filter.cpp
 	src/str_motion_model.cpp

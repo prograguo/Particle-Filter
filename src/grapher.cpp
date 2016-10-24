@@ -69,17 +69,38 @@ bool str::Grapher::setMap(float** map)
 bool str::Grapher::setParticlePoints(
 	const str::particles& particles)
 {
-	sfParticleArray.clear();
-	sfParticleArray.reserve(particles.size());
-	double xsum, ysum = 0;
+	setParticlePoints(particles, 10.0, 5.0);
+}
+
+bool str::Grapher::setParticlePoints(
+	const str::particles& particles,
+	double m_len,
+	double m_size)
+{
+	sfParticleShapeArray.clear();
+	sfParticleShapeArray.reserve(particles.size());
+	sfParticleDirArray.clear();
+	sfParticleDirArray.reserve(particles.size()*2);
+	double x, y, th;
 	for(int i = 0; i < particles.size(); i++)
 	{
-		sf::Vertex pt;
-		pt.position = sf::Vector2f(particles[i].x_cm, particles[i].y_cm );
-		pt.color = sf::Color::Red;
-		sfParticleArray.push_back(pt);
-		xsum += particles[i].x_cm;
-		ysum += particles[i].y_cm;
+		x = particles[i].x_cm;
+		y = particles[i].y_cm;
+		th = particles[i].theta_deg / 180.0 * M_PI;
+
+		sf::CircleShape circ;
+		circ.setPosition(sf::Vector2f(x - m_size/2.0 , y - m_size/2.0));
+		circ.setFillColor(sf::Color::Red);
+		circ.setRadius(m_size);
+		sfParticleShapeArray.push_back(circ);
+
+		sf::Vertex p1, p2;
+		p1.position = sf::Vector2f(x, y);
+		p2.position = sf::Vector2f(x + m_len*cos(th), y + m_len*sin(th) );
+		p1.color = sf::Color::Blue;
+		p2.color = sf::Color::Blue;
+		sfParticleDirArray.push_back(p1);
+		sfParticleDirArray.push_back(p2);
 	}
 }
 
@@ -115,9 +136,15 @@ void str::Grapher::updateGraphics()
 {
 	sfWindow.clear();
   sfWindow.draw(sfMapArray);
-  sfWindow.draw(&sfParticleArray[0],sfParticleArray.size(), sf::Points);
+  //sfWindow.draw(&sfParticleArray[0],sfParticleArray.size(), sf::Points);
+  sfWindow.draw(&sfParticleDirArray[0], sfParticleDirArray.size(), sf::Lines);
   sfWindow.draw(sfCentroid);
   sfWindow.draw(&sfLaserArray[0],sfLaserArray.size(), sf::Lines);
+
+  for(int i = 0; i < sfParticleShapeArray.size(); i++)
+  {
+  	sfWindow.draw(sfParticleShapeArray[i]);
+  }
   
   sfWindow.display();
 }
