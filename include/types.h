@@ -17,7 +17,7 @@ namespace str
 	struct odom{
 		double x_cm;
 		double y_cm;
-		double theta_deg;
+		double theta_rad;
 		double ts;
 	};
 

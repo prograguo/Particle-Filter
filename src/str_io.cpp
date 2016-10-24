@@ -49,7 +49,7 @@ namespace str
 				odom oData;
 				oData.x_cm = x;
 				oData.y_cm = y;
-				oData.theta_deg = theta;
+				oData.theta_rad = theta;
 				oData.ts = ts;
 				odomData.push_back(oData);
 			}
