@@ -51,11 +51,14 @@ target_link_libraries(test_ray_tracer
 
 add_executable(test_observation_model
 	src/test_observation_model.cpp
+	src/helper_functions.cpp
 	src/str_io.cpp
 	src/bee-map.cpp
+	src/grapher.cpp
 	)
 target_link_libraries(test_observation_model
 	${Boost_LIBRARIES}
+	${SFML_LIBRARIES}
 	)
 
 add_executable(persistant_map

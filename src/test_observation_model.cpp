@@ -48,11 +48,15 @@ int main()
     std::vector<str::odom> odomData;
     str::readRobotData("data/log/ascii-robotdata2.log", laserData,  odomData);
 
+    str::Grapher grapher(costMap.size_x, costMap.size_x, 900);
+    grapher.setMap(costMap.prob);
+
     for( auto it = laserData.begin(); it!= laserData.end(); it++)
     {
-        double prob = observationModel.getProbForParticle(p, *it, costMap);
+        double prob = observationModel.getProbForParticle(p, *it, costMap, grapher);
         std::cout<<"Prob for test particle is "<<prob<<'\n';
     }
+
 
     return 0;
 }
