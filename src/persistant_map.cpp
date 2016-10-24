@@ -64,7 +64,7 @@ int main() {
 	for( auto it = odomData.begin(); it!= odomData.end(); it++)
 	{
 		plotOdom.clear();
-		plotOdom.push_back(std::pair<float, float>(it->x, it->y));
+		plotOdom.push_back(std::pair<float, float>(it->x_cm, it->y_cm));
 		gp << "set origin 0,0\n";
 		gp << "set size 1,1\n";
 		gp << "plot '-' title 'odom' pt 7 ps 3\n";

@@ -42,6 +42,8 @@ target_link_libraries(robot_viz_test
 	)
 add_executable(test_ray_tracer
 	src/test_ray_tracer.cpp
+	src/str_io.cpp
+	src/bee-map.cpp
 	)
 target_link_libraries(test_ray_tracer
 	${Boost_LIBRARIES}
@@ -49,6 +51,8 @@ target_link_libraries(test_ray_tracer
 
 add_executable(test_observation_model
 	src/test_observation_model.cpp
+	src/str_io.cpp
+	src/bee-map.cpp
 	)
 target_link_libraries(test_observation_model
 	${Boost_LIBRARIES}
@@ -56,6 +60,8 @@ target_link_libraries(test_observation_model
 
 add_executable(persistant_map
 	src/persistant_map.cpp 
+	src/str_io.cpp
+	src/bee-map.cpp
 	)
 target_link_libraries(persistant_map
 	${Boost_LIBRARIES}
