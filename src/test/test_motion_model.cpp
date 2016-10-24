@@ -25,11 +25,20 @@
 #include "bee-map.h"
 #include "bee-map-impl.h"
 
+void printOdom(const str::odom& data)
+{
+	std::cout << "odom " << 
+		"x: " << data.x_cm << 
+		", y: " << data.y_cm <<
+		", Th: " << data.theta_deg << 
+		", Time: " << data.ts << "\n";
+}
+
 int main() {
 
 	std::vector<str::laser> laserData;
 	std::vector<str::odom> odomData;
-	str::readRobotData("data/log/ascii-robotdata2.log", laserData,	odomData);
+	str::readRobotData("data/log/manual.log", laserData,	odomData);
 	
 	map_type costMap;
 	std::vector<std::pair<int, int>> freeSpace;
@@ -61,7 +70,7 @@ int main() {
 		particleSet.push_back(newParticle);
 	}
 
-	str::Grapher grapher(width, width, 900);
+	str::Grapher grapher(width, width);
 	grapher.setMap(costMap.prob);
 
 	libconfig::Config cfg;
@@ -70,10 +79,10 @@ int main() {
 	str::odom initial=odomData[0];
 	str::motion_model motionModel(cfg,initial);
 
-	for(int i = 0; i < laserData.size()-5; i++)
+	for(int i = 0; i < odomData.size()-5; i++)
 	{
 		std::cout << "iteration: " << i << "\n";
-
+		printOdom(odomData[i]);
 		motionModel.update_odometry(odomData[i]);
 		motionModel.propagate_particles(particleSet);
 		std::cout<<particleSet.front().x_cm;
@@ -83,7 +92,7 @@ int main() {
 		// grapher.updateSensorGraphics();
 
 		grapher.setParticlePoints(particleSet);
-		grapher.setLaserLines(laserData[i].r, 300, 300);
+		//grapher.setLaserLines(laserData[i].r, 300, 300);
 		grapher.updateGraphics();
 	}
 
