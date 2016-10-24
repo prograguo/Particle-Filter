@@ -3,6 +3,8 @@
 #include <cmath>
 #include <libconfig.h++>
 
+#include <iostream>
+
 namespace str
 {
 
@@ -26,10 +28,13 @@ namespace str
 		double translation_cm = translation_cm_ - sample_from_gaussian(0,alpha3_*translation_cm_ + alpha4_*(theta1_rad_+theta2_rad_));   
 
 		double theta2_rad = theta2_rad_ - sample_from_gaussian(0,alpha1_*theta2_rad_ + alpha2_*translation_cm_);
-			
-		curr_particle.x_cm+= translation_cm * std::cos(curr_particle.theta_deg + theta1_rad);
-		curr_particle.y_cm+= translation_cm * std::sin(curr_particle.theta_deg + theta1_rad);
-		curr_particle.theta_deg+=  angle_radians_to_degree(theta1_rad+theta2_rad);
+		
+		std::cout<<"\ntheta1_rad: "<<theta1_rad<<" "<<theta1_rad_;
+		std::cout<<" trans_rad: "<<translation_cm<<" "<<translation_cm_;
+		std::cout<<" theta2_rad: "<<theta2_rad<<" "<<theta2_rad_;
+		curr_particle.x_cm+= (translation_cm * std::cos(angle_degree_to_radians(curr_particle.theta_deg) + theta1_rad));
+		curr_particle.y_cm+= (translation_cm * std::sin(angle_degree_to_radians(curr_particle.theta_deg) + theta1_rad));
+		curr_particle.theta_deg+=  angle_radians_to_degree(theta1_rad)+angle_radians_to_degree(theta2_rad);
 		}
 	}
 
@@ -41,7 +46,7 @@ namespace str
 
 		translation_cm_ = std::hypot((reading.y_cm-current_reading_.y_cm),(reading.x_cm-current_reading_.x_cm));
 
-		theta2_rad_ = angle_degree_to_radians(reading.theta_deg - current_reading_.theta_deg);
+		theta2_rad_ = angle_degree_to_radians(reading.theta_deg) - angle_degree_to_radians(current_reading_.theta_deg)-theta1_rad_;
 
 	// Trim the calculated angles if they are not between [-PI,PI]
 		if(!check_angle(theta1_rad_))

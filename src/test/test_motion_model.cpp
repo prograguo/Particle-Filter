@@ -50,6 +50,7 @@ int main() {
 	  }
 	}
 
+	// int N_Particles = 1;
 	int N_Particles = 1000;
 	str::particles particleSet;
 	for (unsigned int i = 0; i < N_Particles; i++)
@@ -57,8 +58,13 @@ int main() {
 		//std::pair<int, int> pt;
 		//int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
 		//pt = freeSpace[r_pt];
-		str::particle newParticle(400, 400, 0);
+
+		// for (auto &o:odomData)
+		// {
+		// str::particle newParticle(o.x_cm,o.y_cm, 0);
+		str::particle newParticle(400,400, 0);
 		particleSet.push_back(newParticle);
+		// }
 	}
 
 	str::Grapher grapher(width, width, 900);
@@ -76,13 +82,30 @@ int main() {
 
 		motionModel.update_odometry(odomData[i]);
 		motionModel.propagate_particles(particleSet);
-		std::cout<<particleSet.front().x_cm;
+
+		double mean_x=0;
+		double mean_y=0;
+
+		for (const auto& part : particleSet)
+		{
+			mean_x+=part.x_cm;
+			mean_y+=part.y_cm;
+		}
+
+		str::particles newParticle;
+
+		for (size_t idx=0; idx<particleSet.size();++idx)
+		{
+			newParticle.push_back(str::particle(particleSet[idx].x_cm,particleSet[idx].y_cm,particleSet[idx].theta_deg));
+		}
+		std::cout<<"\nOdom x: "<<odomData[i].x_cm<<" meanX "<<mean_x/N_Particles<<" Mean y"<<mean_y/N_Particles;
 
 		// grapher.setMeasuredRanges(laserData[i].r);
 		// grapher.setPredictedRanges(laserData[i+4].r);
 		// grapher.updateSensorGraphics();
 
-		grapher.setParticlePoints(particleSet);
+		grapher.setParticlePoints(newParticle);
+		// grapher.setParticlePoints(particleSet);
 		grapher.setLaserLines(laserData[i].r, 300, 300);
 		grapher.updateGraphics();
 	}
