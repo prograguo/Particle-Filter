@@ -20,6 +20,7 @@
 #include "helper_functions.h"
 #include "grapher.h"
 #include "particle.h"
+#include "str_motion_model.h"
 
 #include "bee-map.h"
 #include "bee-map-impl.h"
@@ -50,21 +51,37 @@ int main() {
 	}
 
 	int N_Particles = 1000;
-	std::vector<str::particle> particleSet;
+	str::particles particleSet;
 	for (unsigned int i = 0; i < N_Particles; i++)
 	{
-		std::pair<int, int> pt;
-		int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
-		pt = freeSpace[r_pt];
-		str::particle newParticle(pt.first, pt.second, 0);
+		//std::pair<int, int> pt;
+		//int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
+		//pt = freeSpace[r_pt];
+		str::particle newParticle(400, 400, 0);
 		particleSet.push_back(newParticle);
 	}
 
-	str::Grapher grapher(width, width);
+	str::Grapher grapher(width, width, 900);
 	grapher.setMap(costMap.prob);
 
-	for(int i = 0; i < laserData.size(); i++)
+	libconfig::Config cfg;
+	cfg.readFile("config/params.cfg");
+
+	str::odom initial=odomData[0];
+	str::motion_model motionModel(cfg,initial);
+
+	for(int i = 0; i < laserData.size()-5; i++)
 	{
+		std::cout << "iteration: " << i << "\n";
+
+		motionModel.update_odometry(odomData[i]);
+		motionModel.propagate_particles(particleSet);
+		std::cout<<particleSet.front().x_cm;
+
+		// grapher.setMeasuredRanges(laserData[i].r);
+		// grapher.setPredictedRanges(laserData[i+4].r);
+		// grapher.updateSensorGraphics();
+
 		grapher.setParticlePoints(particleSet);
 		grapher.setLaserLines(laserData[i].r, 300, 300);
 		grapher.updateGraphics();

@@ -1,3 +1,7 @@
+#ifndef __str__particle__
+#define __str__particle__
+
+#include <vector>
 // Definition of the attributes of a particle
 
 namespace str
@@ -5,9 +9,9 @@ namespace str
 	// Contain location and orientation of a particle
 	struct particle
 	{
-		unsigned int x_cm;
-		unsigned int y_cm;
-		float theta_deg;
+		double x_cm;
+		double y_cm;
+		double theta_deg;
 
 		double weight;
 
@@ -20,16 +24,8 @@ namespace str
 		}
 	};
 
-	// Tuning parameters for the particle filter
-
-	//TODO(ALL): Add tuning parameters for other parts of the filter
-	struct params
-	{
-		// Noise Parameters for the motion model
-		float alpha1=0.1;
-		float alpha2=0.1;
-		float alpha3=0.1;
-		float alpha4=0.1;
-	};
+	//Define a collection of particles 
+	typedef std::vector<particle> particles;
 
 }//end namespace str
+#endif
