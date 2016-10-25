@@ -51,7 +51,7 @@ void particle_filter::filter_update_odom(odom& odometry_reading)
 void particle_filter::filter_update_laser(laser& laser_reading)
 {	
 	particles new_particles;
-	
+
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
 	{
 		//Update weight of particle based on sensor model
@@ -65,8 +65,9 @@ void particle_filter::filter_update_laser(laser& laser_reading)
 	resample(new_particles);
 
 	//Copy these new particles to your particle set
-	// particle_set_.clear();
+	particle_set_.clear();
 	// particle_set_.copy(new_particles.begin(), new_particles.end());
+	particle_set_=new_particles;
 }
 
 void particle_filter::resample(particles& new_particles)

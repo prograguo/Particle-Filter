@@ -76,6 +76,10 @@ int main()
                 PF.filter_update_laser(laserData[l_idx]);
                 ++l_idx;
             }
+    PF.get_particle_set(particleSet);
+
+            grapher.setParticlePoints(particleSet);
+    grapher.updateGraphics();
     }
     // }
     // char c;
