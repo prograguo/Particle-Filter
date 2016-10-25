@@ -30,7 +30,7 @@ void printOdom(const str::odom& data)
 	std::cout << "odom " << 
 		"x: " << data.x_cm << 
 		", y: " << data.y_cm <<
-		", Th: " << data.theta_deg << 
+		", Th: " << data.theta_rad << 
 		", Time: " << data.ts << "\n";
 }
 
@@ -67,7 +67,7 @@ int main() {
 		//std::pair<int, int> pt;
 		//int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
 		//pt = freeSpace[r_pt];
-
+ 
 		// for (auto &o:odomData)
 		// {
 		// str::particle newParticle(o.x_cm,o.y_cm, 0);
@@ -105,7 +105,7 @@ int main() {
 
 		for (size_t idx=0; idx<particleSet.size();++idx)
 		{
-			newParticle.push_back(str::particle(particleSet[idx].x_cm,particleSet[idx].y_cm,particleSet[idx].theta_deg));
+			newParticle.push_back(str::particle(particleSet[idx].x_cm,particleSet[idx].y_cm,particleSet[idx].theta_rad));
 		}
 		std::cout<<"\nOdom x: "<<odomData[i].x_cm<<" meanX "<<mean_x/N_Particles<<" Mean y"<<mean_y/N_Particles;
 

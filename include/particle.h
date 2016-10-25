@@ -11,7 +11,7 @@ namespace str
 	{
 		double x_cm;
 		double y_cm;
-		double theta_deg;
+		double theta_rad;
 
 		double weight;
 
@@ -19,7 +19,7 @@ namespace str
 		{
 			x_cm=x_coord;
 			y_cm=y_coord;
-			theta_deg=gamma;
+			theta_rad=gamma;
 			weight = 0;
 		}
 	};

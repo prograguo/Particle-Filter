@@ -44,7 +44,7 @@ namespace str {
 
             // Calculate the starting angle of the laser reading for 0-360 values, which is p.theta_deg - 90
             // And ensure its between 0 and 359
-            int angleIndex = int(round(p.theta_deg - 90 + MAX_DEGREES)) % MAX_DEGREES;
+            int angleIndex = int(round(p.theta_rad / M_PI*180.0 - 90 + MAX_DEGREES)) % MAX_DEGREES;
             // std::cout<<"Got start angle index "<<angleIndex<<" Laser range data size: "<<l.r.size()<<'\n';
     
             // TODO(Tushar) : Only used for graphing

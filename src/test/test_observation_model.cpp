@@ -79,7 +79,7 @@ int main()
     {
         for( auto pit = particleSet.begin(); pit != particleSet.end(); pit++)
         {   
-            pit->theta_deg++;
+            pit->theta_rad += 0.03;
             double prob = observationModel.getProbForParticle(*pit, *it, costMap, grapher);
             std::cout<<"Prob for test particle is "<<prob<<'\n';
             grapher.setParticlePoints(particleSet);

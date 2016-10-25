@@ -86,7 +86,7 @@ bool str::Grapher::setParticlePoints(
 	{
 		x = particles[i].x_cm;
 		y = particles[i].y_cm;
-		th = particles[i].theta_deg / 180.0 * M_PI;
+		th = particles[i].theta_rad;
 
 		sf::CircleShape circ;
 		circ.setPosition(sf::Vector2f(x - m_size/2.0 , y - m_size/2.0));
