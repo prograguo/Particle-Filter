@@ -38,7 +38,7 @@ int main() {
 
 	std::vector<str::laser> laserData;
 	std::vector<str::odom> odomData;
-	str::readRobotData("data/log/robotdata3.log", laserData,	odomData);
+	str::readRobotData("data/log/manual.log", laserData,	odomData);
 	
 	map_type costMap;
 	std::vector<std::pair<int, int>> freeSpace;
@@ -60,7 +60,7 @@ int main() {
 	}
 
 	// int N_Particles = 1;
-	int N_Particles = 10;
+	int N_Particles = 100;
 	str::particles particleSet;
 	for (unsigned int i = 0; i < N_Particles; i++)
 	{
@@ -77,15 +77,16 @@ int main() {
 	}
 
 	str::Grapher grapher(width, width);
+	std::cout << "setting map\n";
 	grapher.setMap(costMap.prob);
 
 	libconfig::Config cfg;
 	cfg.readFile("config/params.cfg");
+	std::cout << "Read config file\n";
 
-	str::odom initial=odomData[0];
-	str::motion_model motionModel(cfg,initial);
-
-	for(int i = 0; i < odomData.size()-5; i++)
+	str::motion_model motionModel(cfg,odomData[0]);
+	std::cout << "initialized motion model\n";
+	for(int i = 1; i < odomData.size(); i++)
 	{
 		std::cout << "iteration: " << i << "\n";
 		printOdom(odomData[i]);

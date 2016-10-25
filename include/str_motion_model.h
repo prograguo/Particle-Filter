@@ -16,11 +16,11 @@ namespace str
 	{
 	public:
 
-		motion_model(libconfig::Config &cfg, const odom& initial);
+		motion_model(libconfig::Config &cfg, odom& initial);
 
 		void propagate_particles(particles& init_particles);
 
-		void update_odometry(const odom& reading);
+		void update_odometry( odom& reading);
 
 	private:
 

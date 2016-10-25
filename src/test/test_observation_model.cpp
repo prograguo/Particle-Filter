@@ -42,7 +42,7 @@ int main()
 
     observationModel.forcePopulateRangeCache(costMap);
 
-    str::particle p(230, 415, 0);
+    str::particle p(2300, 4150, 0);
 
     std::vector<std::pair<int, int>> freeSpace;
     unsigned int width = costMap.size_x;
@@ -63,7 +63,7 @@ int main()
         std::pair<int, int> pt;
         int r_pt = (std::rand() * freeSpace.size()) / RAND_MAX ;
         pt = freeSpace[r_pt];
-        str::particle newParticle(pt.first, pt.second, r_pt);
+        str::particle newParticle(2300, 4150, r_pt);
         particleSet.push_back(newParticle);
     }
 
@@ -75,11 +75,11 @@ int main()
     grapher.setMap(costMap.prob);
     
 
-    for( auto it = laserData.begin(); it!= laserData.end(); it++)
+    for( auto it = laserData.begin(); it!= laserData.end()-1; it++)
     {
         for( auto pit = particleSet.begin(); pit != particleSet.end(); pit++)
         {   
-            pit->theta_rad += 0.03;
+            pit->theta_rad += 0.01;
             double prob = observationModel.getProbForParticle(*pit, *it, costMap, grapher);
             std::cout<<"Prob for test particle is "<<prob<<'\n';
             grapher.setParticlePoints(particleSet);

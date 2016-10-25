@@ -19,6 +19,16 @@ namespace str
 		double y_cm;
 		double theta_rad;
 		double ts;
+
+		odom& operator=(odom& other)
+    {
+        x_cm= other.x_cm;
+        y_cm= other.y_cm;
+        theta_rad= other.theta_rad;
+        ts= other.ts;
+        return *this;
+    }
+
 	};
 
 	/*

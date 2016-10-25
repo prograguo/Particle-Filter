@@ -84,8 +84,8 @@ bool str::Grapher::setParticlePoints(
 	double x, y, th;
 	for(int i = 0; i < particles.size(); i++)
 	{
-		x = particles[i].x_cm;
-		y = particles[i].y_cm;
+		x = particles[i].x_cm/10.0;
+		y = particles[i].y_cm/10.0;
 		th = particles[i].theta_rad;
 
 		sf::CircleShape circ;

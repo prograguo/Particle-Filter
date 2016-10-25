@@ -8,13 +8,17 @@
 namespace str
 {
 
-	motion_model::motion_model(libconfig::Config &cfg, const odom& initial)
+	motion_model::motion_model(libconfig::Config &cfg,  odom& initial)
 	{
 		alpha1_ = cfg.lookup("motionModel.alpha1");		
 		alpha2_ = cfg.lookup("motionModel.alpha2");		
 		alpha3_ = cfg.lookup("motionModel.alpha3");		
 		alpha4_ = cfg.lookup("motionModel.alpha4");		
-		current_reading_=initial;
+		std::cout << "setting initial\n";
+		current_reading_.x_cm = initial.x_cm;
+		current_reading_.y_cm = initial.y_cm;
+		current_reading_.theta_rad = initial.theta_rad;
+		current_reading_.ts = initial.ts;
 	}
 
 
@@ -38,7 +42,7 @@ namespace str
 		}
 	}
 
-	void motion_model::update_odometry(const odom& reading)
+	void motion_model::update_odometry( odom& reading)
 	{
 
 		theta1_rad_ = std::atan2((reading.y_cm-current_reading_.y_cm),(reading.x_cm-current_reading_.x_cm)) 
@@ -60,7 +64,10 @@ namespace str
 		// }
 
 	//Update the final odometry value
-		current_reading_ = reading;
+		current_reading_.x_cm = reading.x_cm;
+		current_reading_.y_cm = reading.y_cm;
+		current_reading_.theta_rad = reading.theta_rad;
+		current_reading_.ts = reading.ts;
 	}
 
 }//end namespace str

@@ -12,11 +12,10 @@ sensorModel:
 
 motionModel:
 {
-
-	alpha1 = 0.001;
-	alpha2 = 0.001;
-	alpha3 = 0.001;
-	alpha4 = 0.001;
+	alpha1 = 0.01;
+	alpha2 = 0.01;
+	alpha3 = 0.01;
+	alpha4 = 0.01;
 };
 
 plotSettings:
