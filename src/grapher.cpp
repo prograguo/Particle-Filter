@@ -2,6 +2,7 @@
 #include "grapher.h"
 #include "helper_functions.h"
 
+
 str::Grapher::Grapher(int gridSize, int windowSize):
 	sfMapArray(sf::Quads, 4*gridSize*gridSize),
 	sfWindow(sf::VideoMode(windowSize, windowSize), "Map")
@@ -43,6 +44,25 @@ str::Grapher::Grapher(int gridSize, int windowSize, int sensorWindowSize):
 
 }
 
+// str::Grapher::Grapher(str::Grapher &obj)
+// {
+// 	m_gridSize=obj.m_gridSize;
+// 	m_cellSize=obj.m_cellSize;
+// 	m_radius=obj.m_radius;
+// 	m_windowSize=obj.m_windowSize;
+// 	sfMapArray=obj.sfMapArray;
+// 	sfParticleShapeArray=obj.sfParticleShapeArray;
+// 	sfParticleDirArray=obj.sfParticleDirArray;
+// 	sfLaserArray=obj.sfLaserArray;
+// 	sfCentroid=obj.sfCentroid;
+// 	sfWindow=obj.sfWindow;
+
+// 	// secondary sensor window params
+// 	 m_sensorWindowSize=obj.m_sensorWindowSize;
+// 	sfSensorWindow=obj.sfSensorWindow;
+// 	sfMeasRanges=obj.sfMeasRanges;
+// 	sfPredRanges=obj.sfPredRanges;	
+// }
 
 bool str::Grapher::setMap(float** map)
 {

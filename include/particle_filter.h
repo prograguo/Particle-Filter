@@ -12,10 +12,13 @@
 #include "str_sensor_model.h"
 #include "bee-map.h"
 #include "str_observation_model.h"
+#include "grapher.h"
 
 #include <cstdlib>
 #include <memory>
 #include <libconfig.h++>
+#include <functional>
+#include <memory>
 
 
 namespace str
@@ -23,18 +26,24 @@ namespace str
 class particle_filter
 {
 public:
-	particle_filter(libconfig::Config &cfg,odom &inital_odom, const map_type& map);
-	void filter_update(odom odometry_reading, laser laser_reading);
+	particle_filter(libconfig::Config &cfg,odom &inital_odom, 
+		const map_type& map,
+		Grapher &grapher);
+	void filter_update_odom(odom &odometry_reading);
+	void filter_update_laser(laser &laser_reading);
 	void generate_random_particles();
 	void get_particle_set(particles& p){ p = particle_set_;};
 
 
 private:
 
+
 	//Low variance importance resampling of particles 
 	void resample(particles& new_particles);
 	
 	unsigned int number_of_particles;
+
+	Grapher& grapher_;
 
 	std::shared_ptr<motion_model> motion_model_;
 
@@ -47,6 +56,7 @@ private:
 	sensor_model_params sensor_params_;
 
 	int n_particles_;
+
 
 };
 

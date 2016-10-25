@@ -7,9 +7,16 @@
 namespace str
 {
 
-particle_filter::particle_filter(libconfig::Config &cfg, odom &initial_odom, const map_type& map)
+particle_filter::particle_filter(libconfig::Config &cfg, 
+			odom &initial_odom, 
+			const map_type& map, 
+			Grapher& grapher):grapher_(grapher)
 {	
 	map_ = map;
+
+ 	// grapher_=grapher;
+	// grapher_=grapher;
+
 	n_particles_ = cfg.lookup("particles.nParticles");
 
 	// create motion model
@@ -25,21 +32,33 @@ particle_filter::particle_filter(libconfig::Config &cfg, odom &initial_odom, con
   // Create observation Model and build range cache
   observation_model_ = std::make_shared<observation_model>(observation_model(sensor_params_));
   observation_model_->forcePopulateRangeCache(map_);
+
+  // auto get_prob_for_particle_bind = std::bind(observation_model_->getProbForParticle(std::placeholders::_1,std::placeholders::_2,map_,*grapher_));
 }
 
-void particle_filter::filter_update(odom odometry_reading, laser laser_reading)
+void particle_filter::filter_update_odom(odom& odometry_reading)
 {
 
-	particles new_particles;
 
 	//Update the motion model
+	std::cout<<"\nUpdate Particles";
 	motion_model_->update_odometry(odometry_reading);
+	std::cout<<"\nPropagate Particles";
 	motion_model_->propagate_particles(particle_set_);
 
+}
 
+void particle_filter::filter_update_laser(laser& laser_reading)
+{	
+	particles new_particles;
+	
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
 	{
 		//Update weight of particle based on sensor model
+
+		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_);
+	
+		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
 	}
 
 	//Resample the particles based on their updated weights

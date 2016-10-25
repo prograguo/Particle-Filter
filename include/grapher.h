@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 #include "types.h"
 #include "particle.h"
+#include <memory>
 
 namespace str{
 
@@ -33,6 +34,8 @@ public:
 	Grapher(int gridSize, int windowSize);
 
 	Grapher(int gridSize, int windowSize, int sensorWindowSize);
+
+	// Grapher(Grapher &obj);
 
 	// Create a grayscale map vector array
 	bool setMap(float** map);
