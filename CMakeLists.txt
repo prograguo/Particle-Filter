@@ -32,11 +32,13 @@ include_directories(
 
 add_executable(run_particle_filter
 	src/run_particle_filter.cpp
-	src/grapher.cpp
 	src/bee-map.cpp
+	src/grapher.cpp
 	src/helper_functions.cpp
-	src/str_motion_model.cpp
+	src/particle_filter.cpp
 	src/str_io.cpp
+	src/str_motion_model.cpp
+	src/str_sensor_model.cpp	
 	)
 target_link_libraries(run_particle_filter
 	${Boost_LIBRARIES}
@@ -101,21 +103,6 @@ add_executable(sfml_example
 	)
 target_link_libraries(sfml_example
 	${Boost_LIBRARIES}
-	${LIBCONFIGPP_LIBRARIES}
-	${SFML_LIBRARIES}
-	)
-
-add_executable(particle_filter_test
-	src/test/particle_filter_test.cpp
-	src/helper_functions.cpp
-	src/particle_filter.cpp
-	src/str_motion_model.cpp
-	src/str_io.cpp
-	src/str_sensor_model.cpp
-	src/bee-map.cpp
-	)
-
-target_link_libraries(particle_filter_test
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
 	)

@@ -11,6 +11,7 @@
 #include "str_motion_model.h"
 #include "str_sensor_model.h"
 #include "bee-map.h"
+#include "str_observation_model.h"
 
 #include <cstdlib>
 #include <memory>
@@ -22,8 +23,11 @@ namespace str
 class particle_filter
 {
 public:
-	particle_filter(libconfig::Config &cfg,odom &inital_odom);
+	particle_filter(libconfig::Config &cfg,odom &inital_odom, const map_type& map);
 	void filter_update(odom odometry_reading, laser laser_reading);
+	void generate_random_particles();
+	void get_particle_set(particles& p){ p = particle_set_;};
+
 
 private:
 
@@ -34,11 +38,15 @@ private:
 
 	std::shared_ptr<motion_model> motion_model_;
 
-	// sensor_model sensor_model_;
+	std::shared_ptr<observation_model> observation_model_;
 
 	particles particle_set_;
 
 	map_type map_;
+
+	sensor_model_params sensor_params_;
+
+	int n_particles_;
 
 };
 

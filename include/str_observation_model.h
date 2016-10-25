@@ -1,6 +1,6 @@
 #ifndef __str_observation_model__
 #define __str_observation_model__
-#endif
+
 
 #include <vector>
 #include <cmath>
@@ -80,3 +80,4 @@ namespace str {
 
     };
 }
+#endif

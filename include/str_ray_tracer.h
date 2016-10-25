@@ -1,6 +1,5 @@
 #ifndef __str_ray_tracer__
 #define __str_ray_tracer__
-#endif
 
 #include <vector>
 #include <cmath>
@@ -228,3 +227,4 @@ namespace str {
 
     };
 } // end ns str
+#endif
