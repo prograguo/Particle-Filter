@@ -2,6 +2,8 @@
 #define __str__types__
 
 #include <vector>
+#include <map>
+#include <unordered_map>
 
 namespace str
 {
@@ -63,6 +65,27 @@ namespace str
 		double maxParam;
 		double rangeSTD;
 	};
+
+	 // Simple hash for pair of integers
+    struct SimpleHash {
+        size_t operator()(const std::pair<int, int>& p) const {
+            return p.first ^ p.second;
+        }
+    };
+    
+    typedef std::unordered_map<std::pair<int, int>, std::vector<int>, SimpleHash> range_map;
+   	
+
+   	//
+    // Trigonometric data required for each angle in degrees
+    //
+    struct angle_data {
+        double radians;
+        double tmaxX;
+        double tmaxY;
+        double tDeltaX;
+        double tDeltaY;
+    };
 
 
 } // ns str

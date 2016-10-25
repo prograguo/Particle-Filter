@@ -14,6 +14,7 @@
 #include "bee-map-impl.h"
 #include "helper_functions.h"
 #include "particle_filter.h"
+#include "grapher.h"
 
 
 int main()

@@ -10,22 +10,30 @@ namespace str
 {
 
 //Checks angles are between [-pi,pi]
-bool check_angle(const double &angle);
+	bool check_angle(const double &angle);
 
-void trim_angle_radians(double &angle);
+	void trim_angle_radians(double &angle);
 
-double angle_radians_to_degree(const double angle_rad);
+	double angle_radians_to_degree(const double angle_rad);
 
-double angle_degree_to_radians(const double angle_deg);
+	double angle_degree_to_radians(const double angle_deg);
 
-double sample_from_gaussian(double variance);
+	double sample_from_gaussian(double variance);
 
-double sample_from_gaussian(double mean, double variance);
+	double sample_from_gaussian(double mean, double variance);
 
-float sample_from_gaussian2(float mean, float variance);
+	float sample_from_gaussian2(float mean, float variance);
 
-std::vector<std::pair<double,double>>
-		range2Point(const std::vector<int>& ranges);
+	std::vector<std::pair<double,double>>
+	range2Point(const std::vector<int>& ranges);
+
+	int getQuadrant(double angle);
+
+	bool isObstacle(double value);
+
+ std::pair<int,int> cmToMapCoordinates(int x_cm, int y_cm, int map_res);
+
+    double mapToCmCoordinates(double val, int map_res);
 
 } // sn str
 

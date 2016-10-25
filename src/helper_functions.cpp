@@ -71,4 +71,25 @@ namespace str
 		return xy;
 	}
 
+	int getQuadrant(double angle)
+    {
+        return angle/90;        
+    }
+
+    bool isObstacle(double value)
+    {
+        return value > 0.5;
+    }
+
+     std::pair<int,int> cmToMapCoordinates(int x_cm, int y_cm, int map_res)
+    {
+        return std::pair<int,int>(x_cm/map_res, y_cm/map_res);
+    }
+
+    double mapToCmCoordinates(double val, int map_res)
+    {
+        return val * map_res;
+    }
+
+
 } // ns str
