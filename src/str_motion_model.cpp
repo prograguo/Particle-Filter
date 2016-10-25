@@ -49,15 +49,15 @@ namespace str
 		theta2_rad_ = (reading.theta_rad) - (current_reading_.theta_rad)-theta1_rad_;
 
 	// Trim the calculated angles if they are not between [-PI,PI]
-		if(!check_angle(theta1_rad_))
-		{
-			trim_angle_radians(theta1_rad_);
-		}
+		// if(!check_angle(theta1_rad_))
+		// {
+		// 	trim_angle_radians(theta1_rad_);
+		// }
 
-		if(!check_angle(theta2_rad_))
-		{
-			trim_angle_radians(theta2_rad_);
-		}
+		// if(!check_angle(theta2_rad_))
+		// {
+		// 	trim_angle_radians(theta2_rad_);
+		// }
 
 	//Update the final odometry value
 		current_reading_ = reading;

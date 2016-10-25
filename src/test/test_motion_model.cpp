@@ -38,7 +38,7 @@ int main() {
 
 	std::vector<str::laser> laserData;
 	std::vector<str::odom> odomData;
-	str::readRobotData("data/log/manual.log", laserData,	odomData);
+	str::readRobotData("data/log/robotdata3.log", laserData,	odomData);
 	
 	map_type costMap;
 	std::vector<std::pair<int, int>> freeSpace;
