@@ -33,7 +33,7 @@ particle_filter::particle_filter(libconfig::Config &cfg,
   observation_model_ = std::make_shared<observation_model>(observation_model(sensor_params_));
   observation_model_->forcePopulateRangeCache(map_);
 
-  // auto get_prob_for_particle_bind = std::bind(observation_model_->getProbForParticle(std::placeholders::_1,std::placeholders::_2,map_,*grapher_));
+  // auto get_prob_for_particle_bind = std::bind(observation_model_->getProbForParticle(std::placeholders::_1,std::placeholders::_2,map_,grapher_));
 }
 
 void particle_filter::filter_update_odom(odom& odometry_reading)
@@ -50,6 +50,7 @@ void particle_filter::filter_update_odom(odom& odometry_reading)
 
 void particle_filter::filter_update_laser(laser& laser_reading)
 {	
+	std::cout<<"\nLaser Update";
 	particles new_particles;
 
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
@@ -57,7 +58,7 @@ void particle_filter::filter_update_laser(laser& laser_reading)
 		//Update weight of particle based on sensor model
 
 		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_);
-	
+		
 		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
 	}
 
@@ -73,6 +74,8 @@ void particle_filter::filter_update_laser(laser& laser_reading)
 void particle_filter::resample(particles& new_particles)
 {
 	//Make sure new particles are empty
+
+	std::cout<<"\nResampling "<<new_particles.size()<<" "<<particle_set_.size();
 	new_particles.clear();	
 
 	
@@ -94,12 +97,19 @@ void particle_filter::resample(particles& new_particles)
 	{
 		upper_bound = random_number + (particle_idx+1)*num_draws_inv;
 		
-		while(upper_bound>w)
+		while(upper_bound>w && i < particle_set_.size()-1)
 		{
+			
+			if (i>=particle_set_.size())
+			{	
+
+				break;
+			}
 			++i;
 			w+=particle_set_.at(i).weight;
 		}
 		new_particles.push_back(particle_set_.at(i));
+	
 	}
 }
 

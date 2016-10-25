@@ -178,7 +178,7 @@ bool str::Grapher::setMeasuredRanges(const std::vector<int>& ranges)
 	xy = range2Point(ranges);
 
 	double scale = m_sensorWindowSize/800.0 / 5.0; // Sorry for magic scale factor
-	std::cout << "Scale factor is " << scale << "\n";
+	// std::cout << "Scale factor is " << scale << "\n";
 	for(int i = 0; i < ranges.size(); i++)
 	{
 		sf::Vertex vert;

@@ -71,7 +71,7 @@ int main()
 
         PF.filter_update_odom(odomData[o_idx]);
 
-        if(odomData[o_idx].ts ==laserData[l_idx].ts)
+        if(odomData[o_idx].ts >laserData[l_idx].ts && l_idx<laserData.size())
             {
                 PF.filter_update_laser(laserData[l_idx]);
                 ++l_idx;

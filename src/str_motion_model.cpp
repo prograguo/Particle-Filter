@@ -33,9 +33,9 @@ namespace str
 
 		double theta2_rad = theta2_rad_ - sample_from_gaussian(0,alpha1_*theta2_rad_ + alpha2_*translation_cm_);
 		
-		std::cout<<"\ntheta1_rad: "<<theta1_rad<<" "<<theta1_rad_;
-		std::cout<<" trans_rad: "<<translation_cm<<" "<<translation_cm_;
-		std::cout<<" theta2_rad: "<<theta2_rad<<" "<<theta2_rad_;
+		// std::cout<<"\ntheta1_rad: "<<theta1_rad<<" "<<theta1_rad_;
+		// std::cout<<" trans_rad: "<<translation_cm<<" "<<translation_cm_;
+		// std::cout<<" theta2_rad: "<<theta2_rad<<" "<<theta2_rad_;
 		curr_particle.x_cm+= (translation_cm * std::cos(curr_particle.theta_rad + theta1_rad));
 		curr_particle.y_cm+= (translation_cm * std::sin(curr_particle.theta_rad + theta1_rad));
 		curr_particle.theta_rad+=  (theta1_rad)+(theta2_rad);
