@@ -42,6 +42,7 @@ namespace str
                 // std::cout<<"Index: "<<i<<". Angle index in abs: "<<angleIndex<<". Range mean: "<<rangeMean<<". Range observed: "<<rangeObs<<'\n';
                 
                 double prob = sensor_model.getObservationProbability(rangeMean, rangeObs);
+                // std::cout<<"Prob: "<<prob;
                 logObservationProb += log(prob);
 
                 // Update the angle index. Might need to rotate back to front
@@ -58,6 +59,7 @@ namespace str
             grapher.setPredictedRanges(expected_ranges_tmp);
             grapher.updateSensorGraphics();
             
+          	p.weight = logObservationProb;
             return logObservationProb;
         }
 

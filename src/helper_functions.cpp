@@ -91,5 +91,22 @@ namespace str
         return val * map_res;
     }
 
+    double sample_from_uniform(const double min, const double max)
+    {
+		std::uniform_real_distribution<> dis(min, max);
+		return dis(mt);
+    }
+
+    double normalize_weights(particles& particle_set)
+    {	
+    	auto max = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
+    																					{
+    																						return (particle1.weight<particle2.weight);
+    																					});
+    	for (auto& particle:particle_set)
+    	{
+    		particle.weight/= max->weight;
+    	}
+    }
 
 } // ns str

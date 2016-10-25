@@ -41,9 +41,9 @@ void particle_filter::filter_update_odom(odom& odometry_reading)
 
 
 	//Update the motion model
-	std::cout<<"\nUpdate Particles";
+	// std::cout<<"\nUpdate Particles";
 	motion_model_->update_odometry(odometry_reading);
-	std::cout<<"\nPropagate Particles";
+	// std::cout<<"\nPropagate Particles";
 	motion_model_->propagate_particles(particle_set_);
 
 }
@@ -58,9 +58,20 @@ void particle_filter::filter_update_laser(laser& laser_reading)
 		//Update weight of particle based on sensor model
 
 		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_);
-		
+		std::cout<<particle_set_[p_idx].weight<<std::endl;;
 		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
 	}
+
+	normalize_weights(particle_set_);
+
+	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
+	{
+		//Update weight of particle based on sensor model
+
+		std::cout<<particle_set_[p_idx].weight<<std::endl;;
+		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
+	}
+
 
 	//Resample the particles based on their updated weights
 	resample(new_particles);
@@ -83,7 +94,11 @@ void particle_filter::resample(particles& new_particles)
 	double num_draws_inv = 1.0/num_draws;
 
 	// Generate a random number between 0 and num_draws_inv
-	double random_number = (std::rand()/RAND_MAX)*num_draws_inv;
+	// double random_number = (std::rand()/RAND_MAX)*num_draws_inv;
+	double random_number = sample_from_uniform(0,num_draws_inv);
+
+	std::cout<<"\n\nRandom: "<<random_number;
+	std::cout<<"\nDraws Inv: "<<num_draws_inv;
 
 	//First Weight 
 	double w  = particle_set_.front().weight;
@@ -95,19 +110,17 @@ void particle_filter::resample(particles& new_particles)
 
 	for (size_t particle_idx = 0 ; particle_idx < particle_set_.size(); ++particle_idx)
 	{
-		upper_bound = random_number + (particle_idx+1)*num_draws_inv;
+		upper_bound = random_number + (particle_idx)/particle_set_.size();
 		
-		while(upper_bound>w && i < particle_set_.size()-1)
+		while(upper_bound>w && i<particle_set_.size()-1)
 		{
 			
-			if (i>=particle_set_.size())
-			{	
-
-				break;
-			}
 			++i;
+			
 			w+=particle_set_.at(i).weight;
 		}
+		std::cout<<"i: "<<i<<std::endl;
+		// std::cout<<particle_set_.at(i).weight<<std::endl;
 		new_particles.push_back(particle_set_.at(i));
 	
 	}

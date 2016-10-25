@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
+#include "particle.h"
 
 namespace str
 {
@@ -34,6 +36,11 @@ namespace str
  std::pair<int,int> cmToMapCoordinates(int x_cm, int y_cm, int map_res);
 
     double mapToCmCoordinates(double val, int map_res);
+
+    double sample_from_uniform(const double min, const double max);
+
+    double normalize_weights(particles &particle_set);
+
 
 } // sn str
 
