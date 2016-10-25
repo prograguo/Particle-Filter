@@ -98,14 +98,32 @@ namespace str
     }
 
     double normalize_weights(particles& particle_set)
-    {	
+    {		
+
+    	//Highly inefficent
     	auto max = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
     																					{
     																						return (particle1.weight<particle2.weight);
     																					});
+
+    	auto min = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
+    																					{
+    																						return (particle1.weight>particle2.weight);
+    																					});
     	for (auto& particle:particle_set)
     	{
-    		particle.weight/= max->weight;
+    		particle.weight= (particle.weight- min->weight )/ (max->weight-min->weight);
+    	}
+
+    	double sum=0;
+    	for (auto& particle:particle_set)
+    	{
+    		sum+=particle.weight;
+    	}
+
+    	for (auto& particle:particle_set)
+    	{
+    		particle.weight/= sum;
     	}
     }
 
