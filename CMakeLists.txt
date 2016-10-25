@@ -25,13 +25,7 @@ include_directories(
 	${LIBCONFIGPP_INCLUDE_DIRS}
 	${SFML_INCLUDE_DIRS})
 
-
-################################################
-## Main executable 
-################################################
-
-add_executable(run_particle_filter
-	src/run_particle_filter.cpp
+add_library(str_libs 
 	src/bee-map.cpp
 	src/grapher.cpp
 	src/helper_functions.cpp
@@ -39,12 +33,25 @@ add_executable(run_particle_filter
 	src/str_io.cpp
 	src/str_motion_model.cpp
 	src/str_sensor_model.cpp	
+	src/str_observation_model.cpp
+	src/str_ray_tracer.cpp	
+	)
+
+################################################
+## Main executable 
+################################################
+
+add_executable(run_particle_filter
+	src/run_particle_filter.cpp 
 	)
 target_link_libraries(run_particle_filter
 	${Boost_LIBRARIES}
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
+	str_libs
 	)
+
+
 
 ################################################
 ## Tests 
@@ -52,33 +59,28 @@ target_link_libraries(run_particle_filter
 
 add_executable(robot_viz_test
 	src/test/robot_viz_test.cpp 
-	src/str_io.cpp
-	src/str_sensor_model.cpp
-	src/bee-map.cpp
-	src/helper_functions.cpp
 	)
 target_link_libraries(robot_viz_test
 	${Boost_LIBRARIES}
+	str_libs
 	)
+
+
 add_executable(test_ray_tracer
 	src/test/test_ray_tracer.cpp
-	src/str_io.cpp
-	src/bee-map.cpp
 	)
 target_link_libraries(test_ray_tracer
 	${Boost_LIBRARIES}
+	str_libs
 	)
 
 add_executable(test_observation_model
 	src/test/test_observation_model.cpp
-	src/helper_functions.cpp
-	src/str_io.cpp
-	src/bee-map.cpp
-	src/grapher.cpp
 	)
 target_link_libraries(test_observation_model
 	${Boost_LIBRARIES}
 	${SFML_LIBRARIES}
+	str_libs
 	)
 
 
@@ -95,30 +97,20 @@ target_link_libraries(test_observation_model
 
 add_executable(sfml_example
 	src/test/sfml_example.cpp
-	src/grapher.cpp
-	src/bee-map.cpp
-	src/helper_functions.cpp
-	src/str_motion_model.cpp
-	src/str_io.cpp
 	)
 target_link_libraries(sfml_example
 	${Boost_LIBRARIES}
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
+	str_libs
 	)
 
 add_executable(test_motion_model
 	src/test/test_motion_model.cpp
-	src/helper_functions.cpp
-	src/particle_filter.cpp
-	src/str_motion_model.cpp
-	src/str_io.cpp
-	src/str_sensor_model.cpp
-	src/bee-map.cpp
-	src/grapher.cpp
 	)
 
 target_link_libraries(test_motion_model
 	${LIBCONFIGPP_LIBRARIES}
 	${SFML_LIBRARIES}
+	str_libs
 	)
