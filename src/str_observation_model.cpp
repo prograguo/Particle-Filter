@@ -4,7 +4,8 @@ namespace str
 {
 
         observation_model::observation_model(sensor_model_params sensorParams) : sensor_model(SensorModel(sensorParams))
-        {}
+        {
+        }
 
         void observation_model::forcePopulateRangeCache(map_type &map)
         {
@@ -12,7 +13,8 @@ namespace str
             ray_tracer.populateRangeCache(map);
         }
 
-        double observation_model::getProbForParticle(particle &p, laser &l, map_type &map, str::Grapher &grapher)
+        double observation_model::getProbForParticle(particle &p, laser &l, map_type &map, 
+            str::Grapher &grapher, int enablePlotting)
         {
             std::pair<int, int> point = cmToMapCoordinates(p.x_cm, p.y_cm, map.resolution);
             if(isObstacle(map.prob[point.first][point.second]))
@@ -60,9 +62,11 @@ namespace str
             }
             
             // TODO(Tushar) : Only used for graphing
-            grapher.setMeasuredRanges(l.r);
-            grapher.setPredictedRanges(expected_ranges_tmp);
-            grapher.updateSensorGraphics();
+            if(enablePlotting){
+                grapher.setMeasuredRanges(l.r);
+                grapher.setPredictedRanges(expected_ranges_tmp);
+                grapher.updateSensorGraphics();
+            }
             
           	p.weight = logObservationProb;
             return logObservationProb;

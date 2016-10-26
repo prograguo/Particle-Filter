@@ -104,7 +104,7 @@ int main()
             grapher.setLaserLines(it->r, *pit);
             for(int i = 0 ; i < 10; i++){
                 pit->theta_rad += 0.03;
-                double prob = observationModel.getProbForParticle(*pit, *it, costMap, grapher);
+                double prob = observationModel.getProbForParticle(*pit, *it, costMap, grapher, 1);
                 std::cout<<"Prob for test particle is "<<prob<<'\n';
                 grapher.setParticlePoints(particleSet);
                 grapher.updateGraphics();

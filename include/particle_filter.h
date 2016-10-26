@@ -30,9 +30,10 @@ public:
 		const map_type& map,
 		Grapher &grapher);
 	void filter_update_odom(odom &odometry_reading);
-	void filter_update_laser(laser &laser_reading);
+	void filter_update_laser(laser &laser_reading, int enableSensorPlotting);
 	void generate_random_particles();
 	void get_particle_set(particles& p){ p = particle_set_;};
+	particle get_centroid();
 
 
 private:

@@ -121,7 +121,7 @@ namespace str
             // particle_set[i].weight= (particle_set[i].weight- min->weight )/ (max->weight-min->weight);
             // std::cout<<"New Wt: "<<particle_set[i].weight<<'\n'; 
         }
-    	std::cout<<"Min: "<< min_wt <<", Max: "<<max_wt<<'\n';
+    	//std::cout<<"Min: "<< min_wt <<", Max: "<<max_wt<<'\n';
         double sum = 0;
         for (int i=0; i<particle_set.size(); i++)
     	{
@@ -131,7 +131,7 @@ namespace str
         for (int i=0; i<particle_set.size(); i++)
         {
             particle_set[i].weight /= sum;
-            std::cout<<"New Wt: "<<particle_set[i].weight<<'\n';
+           // std::cout<<"New Wt: "<<particle_set[i].weight<<'\n';
         }
     	// double sum=0;
     	// for (auto& particle:particle_set)

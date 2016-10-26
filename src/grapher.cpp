@@ -163,7 +163,7 @@ void str::Grapher::updateGraphics()
   sfWindow.draw(sfMapArray);
   //sfWindow.draw(&sfParticleArray[0],sfParticleArray.size(), sf::Points);
   
-  sfWindow.draw(sfCentroid);
+  
   sfWindow.draw(&sfLaserArray[0],sfLaserArray.size(), sf::Lines);
 
   for(int i = 0; i < sfParticleShapeArray.size(); i++)
@@ -171,7 +171,7 @@ void str::Grapher::updateGraphics()
   	sfWindow.draw(sfParticleShapeArray[i]);
   }
   sfWindow.draw(&sfParticleDirArray[0], sfParticleDirArray.size(), sf::Lines);
-  
+  sfWindow.draw(sfCentroid);
   sfWindow.display();
 }
 

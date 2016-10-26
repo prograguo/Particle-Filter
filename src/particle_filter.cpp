@@ -49,17 +49,17 @@ void particle_filter::filter_update_odom(odom& odometry_reading)
 
 }
 
-void particle_filter::filter_update_laser(laser& laser_reading)
+void particle_filter::filter_update_laser(laser& laser_reading, int enableSensorPlotting)
 {	
-	std::cout<<"\nLaser Update";
+	//std::cout<<"\nLaser Update";
 	particles new_particles;
 
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
 	{
 		//Update weight of particle based on sensor model
 
-		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_);
-		std::cout<<particle_set_[p_idx].weight<<std::endl;;
+		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_, enableSensorPlotting);
+		//std::cout<<particle_set_[p_idx].weight<<std::endl;;
 		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
 	}
 
@@ -69,7 +69,7 @@ void particle_filter::filter_update_laser(laser& laser_reading)
 	{
 		//Update weight of particle based on sensor model
 
-		std::cout<<particle_set_[p_idx].weight<<std::endl;;
+		//std::cout<<particle_set_[p_idx].weight<<std::endl;;
 		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
 	}
 
@@ -87,7 +87,7 @@ void particle_filter::resample(particles& new_particles)
 {
 	//Make sure new particles are empty
 
-	std::cout<<"\nResampling "<<new_particles.size()<<" "<<particle_set_.size();
+	//std::cout<<"\nResampling "<<new_particles.size()<<" "<<particle_set_.size();
 	new_particles.clear();	
 
 	
@@ -98,8 +98,8 @@ void particle_filter::resample(particles& new_particles)
 	// double random_number = (std::rand()/RAND_MAX)*num_draws_inv;
 	double random_number = sample_from_uniform(0,num_draws_inv);
 
-	std::cout<<"\n\nRandom: "<<random_number;
-	std::cout<<"\nDraws Inv: "<<num_draws_inv;
+	//std::cout<<"\n\nRandom: "<<random_number;
+	//std::cout<<"\nDraws Inv: "<<num_draws_inv;
 
 	//First Weight 
 	double w  = particle_set_.front().weight;
@@ -120,7 +120,7 @@ void particle_filter::resample(particles& new_particles)
 			
 			w+=particle_set_.at(i).weight;
 		}
-		std::cout<<"i: "<<i<<std::endl;
+		//std::cout<<"i: "<<i<<std::endl;
 		// std::cout<<particle_set_.at(i).weight<<std::endl;
 		new_particles.push_back(particle_set_.at(i));
 	
@@ -152,6 +152,22 @@ void particle_filter::generate_random_particles()
 	    str::particle newParticle(pt.first, pt.second, r_pt);
 	    particle_set_.push_back(newParticle);
 	}
+}
+
+particle particle_filter::get_centroid()
+{
+	double xsum, ysum, thsum = 0;
+	for(auto p = particle_set_.begin(); p != particle_set_.end(); p++)
+	{
+		xsum += p->x_cm;
+		ysum += p->y_cm;
+		thsum += p->theta_rad;
+	}
+	particle centroid(0,0,0);
+	centroid.x_cm = xsum / particle_set_.size();
+	centroid.y_cm = ysum / particle_set_.size();
+	centroid.theta_rad = thsum / particle_set_.size();
+	return centroid;
 }
 
 }//end namespace str

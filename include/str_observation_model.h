@@ -25,7 +25,8 @@ namespace str {
 
         void forcePopulateRangeCache(map_type &map);
 
-        double getProbForParticle(particle &p, laser &l, map_type &map, str::Grapher &grapher);
+        double getProbForParticle(particle &p, laser &l, 
+        	map_type &map, str::Grapher &grapher, int disablePlotting);
 
         void getSensorModel(std::vector<double>& vals);
     };
