@@ -29,7 +29,7 @@ std::vector<double>
 		decaySum += decayFunction[i];
 
 		double sigSq = pow(rangeSTD, 2);
-		normalFunction[i] = 1.0 / pow(2.0*sigSq*M_PI, -0.5) *
+		normalFunction[i] = 1.0 / pow(2.0*sigSq*M_PI, 0.5) *
 			exp(-1.0* pow(double(i) - rangeMean, 2)/ (2.0*sigSq));
 		normalSum += normalFunction[i];
 	}

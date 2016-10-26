@@ -14,6 +14,10 @@ namespace str
 
         double observation_model::getProbForParticle(particle &p, laser &l, map_type &map, str::Grapher &grapher)
         {
+            std::pair<int, int> point = cmToMapCoordinates(p.x_cm, p.y_cm, map.resolution);
+            if(isObstacle(map.prob[point.first][point.second]))
+                return -9999999;
+
             // Get ranges for that particle - full 360 degrees
             std::vector<int> expected_ranges(MAX_DEGREES, -1);
             ray_tracer.getRangesFromPoint(map, p, expected_ranges);
@@ -43,7 +47,8 @@ namespace str
                 
                 double prob = sensor_model.getObservationProbability(rangeMean, rangeObs);
                 // std::cout<<"Prob: "<<prob;
-                logObservationProb += log(prob);
+                if(prob >= 0)
+                    logObservationProb += log(prob);
 
                 // Update the angle index. Might need to rotate back to front
                 angleIndex = angleIndex + 1;

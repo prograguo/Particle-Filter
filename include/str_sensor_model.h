@@ -25,10 +25,10 @@ namespace str{
 			for(int i = 0; i < MAX_RANGE; i++)
 			{
 				expDecayFunction[i] = sensorParams.decayScale*exp(-sensorParams.decayRate*double(i));
-
 				double sigSq = pow(sensorParams.rangeSTD, 2);
-				gaussianFunction[i] = 1.0 / pow(2.0*sigSq*M_PI, -0.5) *
+				gaussianFunction[i] = 1.0 / pow(2.0*sigSq*M_PI, 0.5) *
 					exp(-1.0* pow(double(i), 2)/ (2.0*sigSq));
+				// std::cout<<gaussianFunction[i]<<'\t';
 			}
 			maxFunction = sensorParams.maxParam;
 			uniformParam = sensorParams.uniformParam;
@@ -38,10 +38,12 @@ namespace str{
 		{
 			if(rangeMean < 0 || rangeMean > MAX_RANGE)
 				std::cout<<"ERROR: Range mean from ray tracer is invalid: "<<rangeMean<<". Crashing..\n";
-			double result;
+			double result = 0;
+			if(rangeMean == MAX_RANGE) // Do not consider in prob calculation
+				return -1;
 			if(rangeMean == MAX_RANGE-1)
 				result += maxFunction;
-			result += expDecayFunction[rangeMean] + uniformParam + gaussianFunction[abs(rangeObserved - rangeMean)];
+			result += (expDecayFunction[rangeObserved] + uniformParam + gaussianFunction[abs(rangeObserved - rangeMean)])/3;
 			return result;
 		}
 

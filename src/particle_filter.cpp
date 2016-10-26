@@ -110,7 +110,7 @@ void particle_filter::resample(particles& new_particles)
 
 	for (size_t particle_idx = 0 ; particle_idx < particle_set_.size(); ++particle_idx)
 	{
-		upper_bound = random_number + (particle_idx)/particle_set_.size();
+		upper_bound = random_number + 1.*(particle_idx)/particle_set_.size();
 		
 		while(upper_bound>w && i<particle_set_.size()-1)
 		{
