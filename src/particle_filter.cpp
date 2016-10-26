@@ -28,6 +28,7 @@ particle_filter::particle_filter(libconfig::Config &cfg,
   sensor_params_.decayRate =    cfg.lookup("sensorModel.decayRate");
   sensor_params_.maxParam =     cfg.lookup("sensorModel.maxParam");
   sensor_params_.rangeSTD =     cfg.lookup("sensorModel.rangeSTD");
+  sensor_params_.gaussianGain = cfg.lookup("sensorModel.gaussianGain");
 
   // Create observation Model and build range cache
   observation_model_ = std::make_shared<observation_model>(observation_model(sensor_params_));

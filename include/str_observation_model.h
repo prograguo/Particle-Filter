@@ -27,6 +27,7 @@ namespace str {
 
         double getProbForParticle(particle &p, laser &l, map_type &map, str::Grapher &grapher);
 
+        void getSensorModel(std::vector<double>& vals);
     };
 }
 #endif

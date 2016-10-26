@@ -46,7 +46,7 @@ public:
 		double m_len, double m_size);
 
 	// Create laser vector array from laser readings
-	bool setLaserLines(std::vector<int>& ranges, int xc, int yc);
+	bool setLaserLines(std::vector<int>& ranges, str::particle& p);
 
 	void setCentroid(int xc, int yc);
 

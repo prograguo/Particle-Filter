@@ -26,7 +26,7 @@ namespace str{
 			{
 				expDecayFunction[i] = sensorParams.decayScale*exp(-sensorParams.decayRate*double(i));
 				double sigSq = pow(sensorParams.rangeSTD, 2);
-				gaussianFunction[i] = 1.0 / pow(2.0*sigSq*M_PI, 0.5) *
+				gaussianFunction[i] = sensorParams.gaussianGain / pow(2.0*sigSq*M_PI, 0.5) *
 					exp(-1.0* pow(double(i), 2)/ (2.0*sigSq));
 				// std::cout<<gaussianFunction[i]<<'\t';
 			}
@@ -45,6 +45,17 @@ namespace str{
 				result += maxFunction;
 			result += (expDecayFunction[rangeObserved] + uniformParam + gaussianFunction[abs(rangeObserved - rangeMean)])/3;
 			return result;
+		}
+
+		void getSensorModel(std::vector<double>& vals)
+		{
+			vals.clear(); 
+			vals.reserve(MAX_RANGE);
+			for(int i = 0; i < MAX_RANGE; i++)
+			{
+				vals.push_back(getObservationProbability( 4000, i));
+			}
+			vals[MAX_RANGE-1] += maxFunction;
 		}
 
 	};

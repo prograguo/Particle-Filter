@@ -6,6 +6,7 @@
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/irange.hpp>
 #include <boost/bind.hpp>
+#include <libconfig.h++>
 
 
 #include "gnuplot-iostream.h"
@@ -21,24 +22,47 @@
 
 int main()
 {
+    libconfig::Config cfg;
+    cfg.readFile("config/params.cfg");
+
+    // Load Map
     map_type costMap;
+    std::string dataLoc = cfg.lookup("mapFile");
+    int val = read_beesoft_map(&dataLoc[0], &costMap);
 
-    // TEST MAP:
-    // char datLoc[] = "data/map/test_ray_tracer.dat";
-    // int val = read_beesoft_map(datLoc, &costMap);
-
-    // WEAN:
-    char datLoc[] = "data/map/wean.dat";
-    int val = read_beesoft_map(datLoc, &costMap);
+    // Load Sensor Logs
+    std::vector<str::laser> laserData;
+    std::vector<str::odom> odomData;
+    std::string logfile = cfg.lookup("logFile");
+    str::readRobotData(logfile, laserData,  odomData);
     
     str::sensor_model_params sensorParams;
-    sensorParams.uniformParam = 0.0001;
-    sensorParams.decayScale = 1000;
-    sensorParams.decayRate = 0.0001;
-    sensorParams.maxParam = 1000;
-    sensorParams.rangeSTD = 250;
-
+      sensorParams.uniformParam = cfg.lookup("sensorModel.uniformParam");
+      sensorParams.decayScale =   cfg.lookup("sensorModel.decayScale");
+      sensorParams.decayRate =    cfg.lookup("sensorModel.decayRate");
+      sensorParams.maxParam =     cfg.lookup("sensorModel.maxParam");
+      sensorParams.rangeSTD =     cfg.lookup("sensorModel.rangeSTD");
+      sensorParams.gaussianGain = cfg.lookup("sensorModel.gaussianGain");
     str::observation_model observationModel(sensorParams);
+
+    std::vector<double> sModel;
+    observationModel.getSensorModel(sModel);
+
+    
+    Gnuplot gp;
+
+    gp << "plot '-' title 'prob'\n";
+    gp.send1d(sModel);
+
+
+    //char c;
+    //std::cout << "Any key to continue\n";
+    //std::cin >> c;
+
+    //str::Grapher grapher_temp{costMap.size_x, costMap.size_x, 300}; 
+    //str::Grapher& grapher = grapher_temp;
+    //grapher.setMap(costMap.prob);
+    //grapher.updateGraphics();
 
     observationModel.forcePopulateRangeCache(costMap);
 
@@ -67,9 +91,6 @@ int main()
         particleSet.push_back(newParticle);
     }
 
-    std::vector<str::laser> laserData;
-    std::vector<str::odom> odomData;
-    str::readRobotData("data/log/ascii-robotdata2.log", laserData,  odomData);
 
     str::Grapher grapher(costMap.size_x, costMap.size_x, 300);
     grapher.setMap(costMap.prob);
@@ -77,14 +98,18 @@ int main()
 
     for( auto it = laserData.begin(); it!= laserData.end()-1; it++)
     {
+
         for( auto pit = particleSet.begin(); pit != particleSet.end(); pit++)
         {   
-            pit->theta_rad += 0.01;
-            double prob = observationModel.getProbForParticle(*pit, *it, costMap, grapher);
-            std::cout<<"Prob for test particle is "<<prob<<'\n';
-            grapher.setParticlePoints(particleSet);
-            grapher.updateGraphics();
-            usleep(1000);
+            grapher.setLaserLines(it->r, *pit);
+            for(int i = 0 ; i < 10; i++){
+                pit->theta_rad += 0.03;
+                double prob = observationModel.getProbForParticle(*pit, *it, costMap, grapher);
+                std::cout<<"Prob for test particle is "<<prob<<'\n';
+                grapher.setParticlePoints(particleSet);
+                grapher.updateGraphics();
+                usleep(10);
+            }
         }
     }
 

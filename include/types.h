@@ -64,6 +64,7 @@ namespace str
 		double decayRate;
 		double maxParam;
 		double rangeSTD;
+		double gaussianGain;
 	};
 
 	 // Simple hash for pair of integers

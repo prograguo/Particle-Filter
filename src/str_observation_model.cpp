@@ -46,7 +46,7 @@ namespace str
                 // std::cout<<"Index: "<<i<<". Angle index in abs: "<<angleIndex<<". Range mean: "<<rangeMean<<". Range observed: "<<rangeObs<<'\n';
                 
                 double prob = sensor_model.getObservationProbability(rangeMean, rangeObs);
-                // std::cout<<"Prob: "<<prob;
+                //std::cout<<"Prob: "<<prob << "\n";
                 if(prob >= 0)
                     logObservationProb += log(prob);
 
@@ -66,6 +66,11 @@ namespace str
             
           	p.weight = logObservationProb;
             return logObservationProb;
+        }
+
+        void observation_model::getSensorModel(std::vector<double>& vals)
+        {
+            sensor_model.getSensorModel(vals);
         }
 
 

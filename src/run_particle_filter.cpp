@@ -74,12 +74,13 @@ int main()
         if(odomData[o_idx].ts >laserData[l_idx].ts && l_idx<laserData.size())
             {
                 PF.filter_update_laser(laserData[l_idx]);
+                grapher.setLaserLines(laserData[l_idx].r, particleSet[0]);
                 ++l_idx;
             }
     PF.get_particle_set(particleSet);
 
             grapher.setParticlePoints(particleSet);
-    grapher.updateGraphics();
+        grapher.updateGraphics();
     }
     // }
     // char c;

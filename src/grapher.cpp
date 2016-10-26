@@ -109,7 +109,7 @@ bool str::Grapher::setParticlePoints(
 		th = particles[i].theta_rad;
 
 		sf::CircleShape circ;
-		circ.setPosition(sf::Vector2f(x - m_size/2.0 , y - m_size/2.0));
+		circ.setPosition(sf::Vector2f(x - m_size , y - m_size));
 		circ.setFillColor(sf::Color::Red);
 		circ.setRadius(m_size);
 		sfParticleShapeArray.push_back(circ);
@@ -117,8 +117,8 @@ bool str::Grapher::setParticlePoints(
 		sf::Vertex p1, p2;
 		p1.position = sf::Vector2f(x, y);
 		p2.position = sf::Vector2f(x + m_len*cos(th), y + m_len*sin(th) );
-		p1.color = sf::Color::Blue;
-		p2.color = sf::Color::Blue;
+		p1.color = sf::Color::Red;
+		p2.color = sf::Color::Red;
 		sfParticleDirArray.push_back(p1);
 		sfParticleDirArray.push_back(p2);
 	}
@@ -126,21 +126,26 @@ bool str::Grapher::setParticlePoints(
 
 bool str::Grapher::setLaserLines(
 	std::vector<int>& ranges, 
-	int xc, int yc)
+	particle& p)
 {
-	std::vector<std::pair<double,double>> xy;
-	xy = range2Point(ranges);
+	//std::vector<std::pair<double,double>> xy;
+	//xy = range2Point(ranges);
 	sfLaserArray.clear();
 	sfLaserArray.reserve(180*2);
+
+	double th = p.theta_rad - M_PI / 2.0;
 	for(int i = 0; i < 180; i++)
 	{
-		int rx = xy[i].first/100;
-		int ry = xy[i].second/100;
+		double norm = ranges[i]/10;
+		th += M_PI / 180.0;
+		int rx = norm * cos(th);
+		int ry = norm * sin(th);
+		
 		sf::Vertex vert;
-		vert.position = sf::Vector2f(xc,yc);
+		vert.position = sf::Vector2f(p.x_cm/10,p.y_cm/10);
 		vert.color = sf::Color::Blue;
 		sfLaserArray.push_back(vert);
-		vert.position = sf::Vector2f(xc+rx,yc+ry); 
+		vert.position = sf::Vector2f(p.x_cm/10 + rx,p.y_cm/10 + ry); 
 		sfLaserArray.push_back(vert);
 
 	}
@@ -157,7 +162,7 @@ void str::Grapher::updateGraphics()
 	sfWindow.clear();
   sfWindow.draw(sfMapArray);
   //sfWindow.draw(&sfParticleArray[0],sfParticleArray.size(), sf::Points);
-  sfWindow.draw(&sfParticleDirArray[0], sfParticleDirArray.size(), sf::Lines);
+  
   sfWindow.draw(sfCentroid);
   sfWindow.draw(&sfLaserArray[0],sfLaserArray.size(), sf::Lines);
 
@@ -165,6 +170,7 @@ void str::Grapher::updateGraphics()
   {
   	sfWindow.draw(sfParticleShapeArray[i]);
   }
+  sfWindow.draw(&sfParticleDirArray[0], sfParticleDirArray.size(), sf::Lines);
   
   sfWindow.display();
 }

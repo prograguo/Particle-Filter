@@ -78,16 +78,17 @@ target_link_libraries(run_particle_filter
 #	str_libs
 #	)
 #
-#add_executable(test_observation_model
-#	src/test/test_observation_model.cpp
-#	src/grapher.cpp
-#	)
-#target_link_libraries(test_observation_model
-#	${Boost_LIBRARIES}
-#	${SFML_LIBRARIES}
-#	str_libs
-#
-#	)
+add_executable(test_observation_model
+	src/test/test_observation_model.cpp
+	src/grapher.cpp
+	)
+target_link_libraries(test_observation_model
+	${Boost_LIBRARIES}
+	${SFML_LIBRARIES}
+	${LIBCONFIGPP_LIBRARIES}
+	str_libs
+
+	)
 #
 #
 ##add_executable(libconfig_example
