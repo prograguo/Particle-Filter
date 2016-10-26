@@ -1,7 +1,7 @@
 //Definition of helper functions used for the filter
 #include <random>
 #include "helper_functions.h"
-
+#include <iostream>
 
 namespace str
 {
@@ -101,30 +101,48 @@ namespace str
     {		
 
     	//Highly inefficent
-    	auto max = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
-    																					{
-    																						return (particle1.weight<particle2.weight);
-    																					});
+    	// auto max = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
+    	// 																				{
+    	// 																					return (particle1.weight<particle2.weight);
+    	// 																				});
 
-    	auto min = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
-    																					{
-    																						return (particle1.weight>particle2.weight);
-    																					});
-    	for (auto& particle:particle_set)
+    	// auto min = std::max_element(particle_set.begin(), particle_set.end(), [&] (const particle &particle1,const particle &particle2)
+    	// 																				{
+    	// 																					return (particle1.weight>particle2.weight);
+    	// 																				});
+        double min_wt = 99999999;
+        double max_wt = 0;
+        for (int i=0; i<particle_set.size(); i++)
+        {
+            if(particle_set[i].weight <= min_wt)
+                min_wt = particle_set[i].weight;
+            if(particle_set[i].weight >= max_wt)
+                max_wt = particle_set[i].weight;
+            // particle_set[i].weight= (particle_set[i].weight- min->weight )/ (max->weight-min->weight);
+            // std::cout<<"New Wt: "<<particle_set[i].weight<<'\n'; 
+        }
+    	std::cout<<"Min: "<< min_wt <<", Max: "<<max_wt<<'\n';
+        double sum = 0;
+        for (int i=0; i<particle_set.size(); i++)
     	{
-    		particle.weight= (particle.weight- min->weight )/ (max->weight-min->weight);
+    		particle_set[i].weight= (particle_set[i].weight- min_wt )/ (max_wt-min_wt);
+            sum += particle_set[i].weight;
     	}
+        for (int i=0; i<particle_set.size(); i++)
+        {
+            particle_set[i].weight /= sum;
+            std::cout<<"New Wt: "<<particle_set[i].weight<<'\n';
+        }
+    	// double sum=0;
+    	// for (auto& particle:particle_set)
+    	// {
+    	// 	sum+=particle.weight;
+    	// }
 
-    	double sum=0;
-    	for (auto& particle:particle_set)
-    	{
-    		sum+=particle.weight;
-    	}
-
-    	for (auto& particle:particle_set)
-    	{
-    		particle.weight/= sum;
-    	}
+    	// for (auto& particle:particle_set)
+    	// {
+    	// 	particle.weight/= sum;
+    	// }
     }
 
 } // ns str
