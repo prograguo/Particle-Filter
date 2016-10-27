@@ -3,7 +3,7 @@
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 %\usepackage{amsmath}
-
+\usepackage{parskip}
 \begin{document}
 \title{16-831 Project 3: Robot Localization}
 \author{Alex Brinkman, Shivam Gautam, Tushar Agrawal}
@@ -17,13 +17,13 @@
 \end{figure}
 
 \section{Approach}
-	We started by first developing the modules in isolation to facilitate future integration. We started by independently developing the sensor model, motion model, ray tracing, and graphics engine, and log-streaming modules first. We performed unit testing on each to verify they were working properly, relying heavily on the graphics to validate the complex modules. Once the modules were build up, we integrated the modules and debugged the interfacing issues and added importance resampling. Since the modules were tested independently, this was relatively painless. Finally, we refined the pipeline to improve runtime and tuned the particle filter parameters to find a good trade-off between convergence speed and correctness. Figure \ref{fig:1} depicts the final outcome of the particle filter.
+    We started by first developing the modules in isolation to facilitate future integration. We started by independently developing the sensor model, motion model, ray tracing, and graphics engine, and log-streaming modules first. We performed unit testing on each to verify they were working properly, relying heavily on the graphics to validate the complex modules. Once the modules were build up, we integrated the modules and debugged the interfacing issues and added importance resampling. Since the modules were tested independently, this was relatively painless. Finally, we refined the pipeline to improve runtime and tuned the particle filter parameters to find a good trade-off between convergence speed and correctness. Figure \ref{fig:1} depicts the final outcome of the particle filter.
 
 \section{Implementation}
-	We implemented the particle filter in C++ and used a private git repo in our workflow.  All modules were implemented as stand alone classes and invoked in executable scripts.  The final integration took the individual classes and encapsulated the modules while exposing configuration parameters to ease tuning. We used GNUplot-iostream to visualize 1D data like the sensor model and the SFML library to visualize the map, particles, and laser readings.  
+    We implemented the particle filter in C++ and used a private git repo in our workflow.  All modules were implemented as stand alone classes and invoked in executable scripts.  The final integration took the individual classes and encapsulated the modules while exposing configuration parameters to ease tuning. We used GNUplot-iostream to visualize 1D data like the sensor model and the SFML library to visualize the map, particles, and laser readings.  
 
 \subsection{Sensor Model}
-	The sensor model consists of a superposition of an exponential decay function, Gaussian distribution, uniform distribution, and max value.  The Gaussian distribution mean is placed at the expected range measurement with a tunable variance. Since the we need to sum the log-likelihood of each of the 180 range readings, the uniform distribution of the model is 1 so for any range measurement this provides a non-negative log-likelihood. The decay function plays a small role in the overall shape of the function, only affecting the first meter or so. The Gaussian was tuned first by using reasonable values for gain factor and standard deviation.  We found that once we set the initial values to something reasonable, we did not have to tune this model much to get the performance we desired. Figure \ref{fig:2} shows the final sensor model used in our tuned model and Figure \ref{fig:3} shows the final parameters.
+    The sensor model consists of a superposition of an exponential decay function, Gaussian distribution, uniform distribution, and max value.  The Gaussian distribution mean is placed at the expected range measurement with a tunable variance. Since the we need to sum the log-likelihood of each of the 180 range readings, the uniform distribution of the model is 1 so for any range measurement this provides a non-negative log-likelihood. The decay function plays a small role in the overall shape of the function, only affecting the first meter or so. The Gaussian was tuned first by using reasonable values for gain factor and standard deviation.  We found that once we set the initial values to something reasonable, we did not have to tune this model much to get the performance we desired. Figure \ref{fig:2} shows the final sensor model used in our tuned model and Figure \ref{fig:3} shows the final parameters.
 \begin{figure}[!h]
     \centering
     \includegraphics[width=2.5in]{media/sensor_model.png}
@@ -40,7 +40,20 @@
 
 \subsection{Motion Model}
 
-Using the odometry readings from the log, the particle position was updated from the measurements augmented by some Gaussian noise. 
+Using the odometry readings from the log, the particle position was updated from the measurements augmented by some Gaussian noise. The motion of the particle between two consecutive odometry readings was broken down into three motions - 
+\begin{itemize}
+\item A rotation to align the heading with the axis of translation.
+\item A translation to reach the final x,y position.
+\item A final rotation at the x,y postition to align the heading with the final heading.
+\end{itemize}
+
+The particles were propagated based on the the variance associated with the rotation and translation. The description of the noise parameters used for the motion model were as follows[1] - 
+\begin{itemize}
+\item alpha1: Specifies the expected noise in odometry's rotation estimate from the rotational component of the robot's motion. 
+\item alpha2: Specifies the expected noise in odometry's rotation estimate from translational component of the robot's motion. 
+\item alpha3: Specifies the expected noise in odometry's translation estimate from the translational component of the robot's motion. 
+\item alpha4: Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. 
+\end{itemize}
 
 \begin{figure}[!h]
     \centering
@@ -64,7 +77,7 @@ Since ray casting was required for each particle, 180 degrees, up to a max dista
 
 \subsection{Importance Resampling}
 
-After a laser reading update, each particle was assigned a weight according to how well it fit the sensor reading. Our implementation used low variance resampling. We used the algorithm laid out by Cyrill Stachniss from his lectures[1].  This technique forces a set of samples to be sampled randomly but at small, regular intervals through the particle weights. This ensures that some particles of low weight still survive and ensures the filter will not converge when the weights are uniform i.e. when no information is gained from the laser reading.  This has the added benefit of running in linear time.
+After a laser reading update, each particle was assigned a weight according to how well it fit the sensor reading. Our implementation used low variance resampling. We used the algorithm laid out by Cyrill Stachniss from his lectures[2].  This technique forces a set of samples to be sampled randomly but at small, regular intervals through the particle weights. This ensures that some particles of low weight still survive and ensures the filter will not converge when the weights are uniform i.e. when no information is gained from the laser reading.  This has the added benefit of running in linear time.
 
 \section{Results}
 
@@ -76,7 +89,9 @@ There are several obvious areas to improve our particle filter.  The first is pa
 
 More here pending results of extracredit part
 
-\section{References}
-[1] Cyrill Stachniss,  https://www.youtube.com/watch?v=eAqAFSrTGGY
+\section{References}\
+[1] http://wiki.ros.org/amcl 
+
+[2] Cyrill Stachniss,  https://www.youtube.com/watch?v=eAqAFSrTGGY
 
 \end{document}
