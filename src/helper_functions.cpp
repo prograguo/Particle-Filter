@@ -133,16 +133,12 @@ namespace str
             particle_set[i].weight /= sum;
            // std::cout<<"New Wt: "<<particle_set[i].weight<<'\n';
         }
-    	// double sum=0;
-    	// for (auto& particle:particle_set)
-    	// {
-    	// 	sum+=particle.weight;
-    	// }
+    }    
 
-    	// for (auto& particle:particle_set)
-    	// {
-    	// 	particle.weight/= sum;
-    	// }
+    void add_random_particles(particles &particle_set)
+    {
+
     }
+
 
 } // ns str

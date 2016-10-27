@@ -58,6 +58,8 @@ private:
 
 	int n_particles_;
 
+	double sum_of_particles_;
+
 
 };
 

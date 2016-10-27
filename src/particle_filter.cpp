@@ -34,7 +34,6 @@ particle_filter::particle_filter(libconfig::Config &cfg,
   observation_model_ = std::make_shared<observation_model>(observation_model(sensor_params_));
   observation_model_->forcePopulateRangeCache(map_);
 
-  // auto get_prob_for_particle_bind = std::bind(observation_model_->getProbForParticle(std::placeholders::_1,std::placeholders::_2,map_,grapher_));
 }
 
 void particle_filter::filter_update_odom(odom& odometry_reading)
@@ -54,26 +53,53 @@ void particle_filter::filter_update_laser(laser& laser_reading, int enableSensor
 	//std::cout<<"\nLaser Update";
 	particles new_particles;
 
+  	// auto get_prob_for_particle_bind = std::bind(&observation_model::getProbForParticle,std::placeholders::_1,std::placeholders::_2,map_,grapher_,enableSensorPlotting);
+
+	double sum_of_weights = 0.0;
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
 	{
 		//Update weight of particle based on sensor model
 
 		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_, enableSensorPlotting);
+		sum_of_weights+= particle_set_[p_idx].weight;
 		//std::cout<<particle_set_[p_idx].weight<<std::endl;;
-		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
+		// get_prob_for_particle_bind(particle_set_[p_idx],laser_reading);
 	}
 
-	normalize_weights(particle_set_);
+	
+	std::cout<<"\nSum of weights before: "<< sum_of_weights;
 
+	if (sum_of_weights * 2.0 < sum_of_particles_)
+	{	
+		std::cout<<"\nGenerated Number of particles";
+		generate_random_particles();
+	}
+
+	else
+	{
+		sum_of_particles_=sum_of_weights;
+	}
+
+	sum_of_weights = 0.0;
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
 	{
 		//Update weight of particle based on sensor model
 
+		sum_of_weights+= particle_set_[p_idx].weight;
 		//std::cout<<particle_set_[p_idx].weight<<std::endl;;
-		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
+		// get_prob_for_particle_bind(particle_set_[p_idx],laser_reading);
 	}
 
+	std::cout<<"\nSum of weights after: "<< sum_of_weights;
+	
+	normalize_weights(particle_set_);
 
+	// double sum_of_weights= std::accumulate(particle_set_.begin(),particle_set_.end(),0.0,[&](const particle p)
+	// 													{
+	// 														return p.weight; 
+	// 													});
+
+	
 	//Resample the particles based on their updated weights
 	resample(new_particles);
 
@@ -120,10 +146,7 @@ void particle_filter::resample(particles& new_particles)
 			
 			w+=particle_set_.at(i).weight;
 		}
-		//std::cout<<"i: "<<i<<std::endl;
-		// std::cout<<particle_set_.at(i).weight<<std::endl;
 		new_particles.push_back(particle_set_.at(i));
-	
 	}
 }
 
@@ -144,6 +167,7 @@ void particle_filter::generate_random_particles()
 	}
 
 	// Initialize particle set
+	particle_set_.clear();
 	for (unsigned int i = 0; i < n_particles_; i++)
 	{
 	    std::pair<int, int> pt;
