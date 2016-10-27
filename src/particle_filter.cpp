@@ -67,12 +67,12 @@ void particle_filter::filter_update_laser(laser& laser_reading, int enableSensor
 	}
 
 	
-	std::cout<<"\nSum of weights before: "<< sum_of_weights;
+	// std::cout<<"\nSum of weights before: "<< sum_of_weights;
 
 	if (sum_of_weights * 2.0 < sum_of_particles_)
 	{	
 		std::cout<<"\nGenerated Number of particles";
-		generate_random_particles();
+		// generate_random_particles();
 	}
 
 	else
@@ -90,7 +90,7 @@ void particle_filter::filter_update_laser(laser& laser_reading, int enableSensor
 		// get_prob_for_particle_bind(particle_set_[p_idx],laser_reading);
 	}
 
-	std::cout<<"\nSum of weights after: "<< sum_of_weights;
+	// std::cout<<"\nSum of weights after: "<< sum_of_weights;
 	
 	normalize_weights(particle_set_);
 
@@ -192,6 +192,21 @@ particle particle_filter::get_centroid()
 	centroid.y_cm = ysum / particle_set_.size();
 	centroid.theta_rad = thsum / particle_set_.size();
 	return centroid;
+}
+
+particle particle_filter::get_max()
+{	
+	size_t max_idx =0 ;
+	double max_weight = std::numeric_limits<double>::min();
+	for(size_t p_idx = 0 ; p_idx < particle_set_.size(); ++p_idx)
+	{
+		if (particle_set_[p_idx].weight>max_weight)
+		{
+			max_weight = particle_set_[p_idx].weight;
+			max_idx = p_idx;
+		}
+	}
+	return particle_set_[max_idx];
 }
 
 }//end namespace str
