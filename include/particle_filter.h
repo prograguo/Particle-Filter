@@ -61,6 +61,8 @@ private:
 
 	double sum_of_particles_;
 
+	double kidnapped_robot_factor_;
+
 
 };
 
