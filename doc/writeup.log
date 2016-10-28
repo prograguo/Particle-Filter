@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.9.7)  26 OCT 2016 21:04
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.9.7)  27 OCT 2016 22:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -313,6 +313,9 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutvoffset=\dimen112
 \Gm@dimlist=\toks15
 )
+(/usr/share/texlive/texmf-dist/tex/latex/parskip/parskip.sty
+Package: parskip 2001/04/09 non-zero parskip adjustments
+)
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
 
@@ -452,55 +455,51 @@ File: media/sensor_model_parameters.png Graphic file (type png)
 Package pdftex.def Info: media/sensor_model_parameters.png used on input line 3
 6.
 (pdftex.def)             Requested size: 144.54pt x 75.28105pt.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 45.
 
-<media/motion_model_parameters.png, id=13, 191.71625pt x 71.26625pt>
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 45.
+ [2 <./media/sensor_model.png> <./media/sensor_model_parameters.png>]
+<media/motion_model_parameters.png, id=17, 191.71625pt x 71.26625pt>
 File: media/motion_model_parameters.png Graphic file (type png)
 
 <use media/motion_model_parameters.png>
-Package pdftex.def Info: media/motion_model_parameters.png used on input line 4
-7.
+Package pdftex.def Info: media/motion_model_parameters.png used on input line 6
+0.
 (pdftex.def)             Requested size: 144.54pt x 53.73227pt.
 
-<media/ray_tracing.png, id=14, 410.53375pt x 235.88126pt>
+<media/ray_tracing.png, id=18, 410.53375pt x 235.88126pt>
 File: media/ray_tracing.png Graphic file (type png)
 
 <use media/ray_tracing.png>
-Package pdftex.def Info: media/ray_tracing.png used on input line 58.
+Package pdftex.def Info: media/ray_tracing.png used on input line 71.
 (pdftex.def)             Requested size: 180.67499pt x 103.80966pt.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[2 <./media/sensor_model.png> <./media/sensor_model_parameters.png> <./media/mo
-tion_model_parameters.png>] [3 <./media/ray_tracing.png>] (./writeup.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                writeup
-(biblatex)                and rerun LaTeX afterwards.
-
+ [3 <./media/motion_model_parameters.png> <./media/ray_tracing.png>] [4] [5] (.
+/writeup.aux)
 Package logreq Info: Writing requests to 'writeup.run.xml'.
 \openout1 = `writeup.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 7065 strings out of 493304
- 117431 string characters out of 6139872
- 506367 words of memory out of 5000000
- 10456 multiletter control sequences out of 15000+600000
+ 7089 strings out of 493304
+ 117953 string characters out of 6139872
+ 506376 words of memory out of 5000000
+ 10474 multiletter control sequences out of 15000+600000
  7587 words of font info for 27 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 44i,6n,35p,937b,660s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,6n,35p,940b,660s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on writeup.pdf (3 pages, 158597 bytes).
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on writeup.pdf (5 pages, 170363 bytes).
 PDF statistics:
- 35 PDF objects out of 1000 (max. 8388607)
- 20 compressed objects within 1 object stream
+ 45 PDF objects out of 1000 (max. 8388607)
+ 27 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
