@@ -87,11 +87,24 @@ Our particle filter algorithm converges to an accurate solution when using 3000 
 
 There are several obvious areas to improve our particle filter.  The first is parallelization. We could approximately achieve a speed up of approximately Nx using N threads given the particle propagations computations are inherently parallel operations.
 
-More here pending results of extracredit part
+
+\section{Kidnapped Robot Problem}
+
+We implemented a basic solution for the kidnapped robot problem and tested its working on a ``kidnap.log'' file which was created by merging data from two different log files (robotdata1.log and robotdata3.log). \\
+In this solution, the system detects if the sum of weights of all particles in an iteration drops by certain factor compared to the previous iteration, then the robot is considered to be ``kidnapped''. This ``kidnapped'' factor is tunable and currently set to 0.82. In such a scenario, the current particles are cleared and a new random set of particles are reinitialized and the system reconverges to the new position of the robot. A video depicting a run on the kidnapped robot problem is also included.
+
+\section{Adaptive number of particles}
+
+In the current implementation only a fixed number of particles was used due to lack of time for the implementation. We considered the approach of likelihood-based sampling which is relatively easy to implement. \\
+Likelihood-based adaptation determines the number of samples such that the sum of non-normalized likelihoods (importance weights) exceeds a prespecified threshold. Intuitively, if the sample set is well in tune with the sensor reading, each individual importance weight is large and the sample set should remain small. If, however, the sensor reading carries a lot of surprise, as is the case when the robot is globally uncertain or when it lost track of its position, the individual sample weights are small and the sample set should become large. The likelihood-based adaptation directly relates to the property that the variance of the importance sampler is a function of the mismatch between the proposal distribution and the distribution that is being approximated. \\
+In the presence of more time, the KLD sampling approch could be implemented for updating the number of particles adaptively.
+
 
 \section{References}\
 [1] http://wiki.ros.org/amcl 
 
 [2] Cyrill Stachniss,  https://www.youtube.com/watch?v=eAqAFSrTGGY
+
+[3] Dieter Fox, ``KLD-Sampling: Adaptive Particle Filters''
 
 \end{document}
