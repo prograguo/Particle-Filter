@@ -34,6 +34,7 @@ public:
 	void generate_random_particles();
 	void get_particle_set(particles& p){ p = particle_set_;};
 	particle get_centroid();
+	particle get_max();
 
 
 private:
@@ -57,6 +58,10 @@ private:
 	sensor_model_params sensor_params_;
 
 	int n_particles_;
+
+	double sum_of_particles_;
+
+	double kidnapped_robot_factor_;
 
 
 };

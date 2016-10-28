@@ -41,6 +41,8 @@ namespace str
 
     double normalize_weights(particles &particle_set);
 
+    void add_random_particles(particles &particle_set);
+
 
 } // sn str
 

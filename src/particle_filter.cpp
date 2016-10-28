@@ -34,17 +34,14 @@ particle_filter::particle_filter(libconfig::Config &cfg,
   observation_model_ = std::make_shared<observation_model>(observation_model(sensor_params_));
   observation_model_->forcePopulateRangeCache(map_);
 
-  // auto get_prob_for_particle_bind = std::bind(observation_model_->getProbForParticle(std::placeholders::_1,std::placeholders::_2,map_,grapher_));
+  kidnapped_robot_factor_ = cfg.lookup("kidnapped_factor");
+
 }
 
 void particle_filter::filter_update_odom(odom& odometry_reading)
 {
-
-
 	//Update the motion model
-	// std::cout<<"\nUpdate Particles";
 	motion_model_->update_odometry(odometry_reading);
-	// std::cout<<"\nPropagate Particles";
 	motion_model_->propagate_particles(particle_set_);
 
 }
@@ -53,26 +50,33 @@ void particle_filter::filter_update_laser(laser& laser_reading, int enableSensor
 {	
 	//std::cout<<"\nLaser Update";
 	particles new_particles;
+	double sum_of_weights = 0.0;
+
+  	// auto get_prob_for_particle_bind = std::bind(&observation_model::getProbForParticle,std::placeholders::_1,std::placeholders::_2,map_,grapher_,enableSensorPlotting);
 
 	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
 	{
 		//Update weight of particle based on sensor model
-
 		observation_model_->getProbForParticle(particle_set_[p_idx],laser_reading,map_,grapher_, enableSensorPlotting);
-		//std::cout<<particle_set_[p_idx].weight<<std::endl;;
-		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
+		sum_of_weights+= particle_set_[p_idx].weight;
 	}
+
+	// std::cout<<"\nOld: "<<sum_of_particles_<<" New: "<<sum_of_weights;
+
+	if (sum_of_weights / sum_of_particles_ <kidnapped_robot_factor_)
+	{	
+		std::cout<<"\nGenerated Random number of particles again. Robot Kidnapped.";
+		particle_set_.clear();
+		this->generate_random_particles();
+		sum_of_particles_=sum_of_weights;
+		// std::cout<<"\nParticle Size: "<<particle_set_.size();
+		sum_of_particles_=sum_of_weights;
+	}
+	else
+	{
+	// std::cout<<"\nSum of weights before: "<< sum_of_weights;
 
 	normalize_weights(particle_set_);
-
-	for (size_t p_idx=0; p_idx < particle_set_.size(); ++p_idx)
-	{
-		//Update weight of particle based on sensor model
-
-		//std::cout<<particle_set_[p_idx].weight<<std::endl;;
-		// get_prob_for_particle_bind(particle_set_[idx],laser_reading);
-	}
-
 
 	//Resample the particles based on their updated weights
 	resample(new_particles);
@@ -80,7 +84,13 @@ void particle_filter::filter_update_laser(laser& laser_reading, int enableSensor
 	//Copy these new particles to your particle set
 	particle_set_.clear();
 	// particle_set_.copy(new_particles.begin(), new_particles.end());
-	particle_set_=new_particles;
+	particle_set_=new_particles;	
+
+	sum_of_particles_=sum_of_weights;
+	}
+
+
+	
 }
 
 void particle_filter::resample(particles& new_particles)
@@ -120,10 +130,7 @@ void particle_filter::resample(particles& new_particles)
 			
 			w+=particle_set_.at(i).weight;
 		}
-		//std::cout<<"i: "<<i<<std::endl;
-		// std::cout<<particle_set_.at(i).weight<<std::endl;
 		new_particles.push_back(particle_set_.at(i));
-	
 	}
 }
 
@@ -144,6 +151,7 @@ void particle_filter::generate_random_particles()
 	}
 
 	// Initialize particle set
+	particle_set_.clear();
 	for (unsigned int i = 0; i < n_particles_; i++)
 	{
 	    std::pair<int, int> pt;
@@ -168,6 +176,21 @@ particle particle_filter::get_centroid()
 	centroid.y_cm = ysum / particle_set_.size();
 	centroid.theta_rad = thsum / particle_set_.size();
 	return centroid;
+}
+
+particle particle_filter::get_max()
+{	
+	size_t max_idx =0 ;
+	double max_weight = std::numeric_limits<double>::min();
+	for(size_t p_idx = 0 ; p_idx < particle_set_.size(); ++p_idx)
+	{
+		if (particle_set_[p_idx].weight>max_weight)
+		{
+			max_weight = particle_set_[p_idx].weight;
+			max_idx = p_idx;
+		}
+	}
+	return particle_set_[max_idx];
 }
 
 }//end namespace str

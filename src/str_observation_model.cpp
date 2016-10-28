@@ -16,9 +16,9 @@ namespace str
         double observation_model::getProbForParticle(particle &p, laser &l, map_type &map, 
             str::Grapher &grapher, int enablePlotting)
         {
-            std::pair<int, int> point = cmToMapCoordinates(p.x_cm, p.y_cm, map.resolution);
-            if(isObstacle(map.prob[point.first][point.second]))
-                return -9999999;
+            // std::pair<int, int> point = cmToMapCoordinates(p.x_cm, p.y_cm, map.resolution);
+            // if(isObstacle(map.prob[point.first][point.second]))
+            //     return -9999999;
 
             // Get ranges for that particle - full 360 degrees
             std::vector<int> expected_ranges(MAX_DEGREES, -1);

@@ -84,9 +84,9 @@ int main()
         PF.filter_update_odom(odomData[o_idx]);
 
         if(odomData[o_idx].ts >laserData[l_idx].ts && l_idx<laserData.size())
-            {
+            {   
                 PF.filter_update_laser(laserData[l_idx], enableSensorPlotting);
-                str::particle centroid = PF.get_centroid();
+                str::particle centroid = PF.get_max();
                 grapher.setLaserLines(laserData[l_idx].r, centroid);
                 grapher.setCentroid(centroid.x_cm/10, centroid.y_cm/10);
                 ++l_idx;
